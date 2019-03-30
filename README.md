@@ -1,1 +1,3 @@
-# hwOtus-2019
+Студент:
+Evgeniy Malyshev (Евгений Малышев)
+lev-sait@mail.ru
