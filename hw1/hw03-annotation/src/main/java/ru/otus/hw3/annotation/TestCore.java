@@ -23,16 +23,12 @@ public class TestCore {
      * @param classObject объект тестируемого класс
      * @param annotationName наименование аннотации
      */
-    private static void invokeMethod(Map<String, List<Method>> testAnnotationMethodsMap, Object classObject, String annotationName) {
+    private static void invokeMethods(Map<String, List<Method>> testAnnotationMethodsMap, Object classObject, String annotationName) throws InvocationTargetException, IllegalAccessException {
         List<Method> methods = testAnnotationMethodsMap.get(annotationName);
 
-        methods.forEach(method -> {
-            try {
-                method.invoke(classObject);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        });
+        for (Method method : methods) {
+            method.invoke(classObject);
+        }
     }
 
     /**
@@ -43,24 +39,42 @@ public class TestCore {
     private static void invokeTestMethods(Constructor<?> constructor, Map<String, List<Method>> testAnnotationMethodsMap) {
         List<Method> methods = testAnnotationMethodsMap.get(TEST_ANNOTATION);
 
-        methods.forEach(method -> {
+        for(Method method : methods) {
             Object classObject = null;
             try {
                 classObject = constructor.newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
+                continue;
             }
 
-            invokeMethod(testAnnotationMethodsMap, classObject, BEFORE_EACH_ANNOTATION);
+
+            try {
+                invokeMethods(testAnnotationMethodsMap, classObject, BEFORE_EACH_ANNOTATION);
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                e.printStackTrace();
+                try {
+                    invokeMethods(testAnnotationMethodsMap, classObject, AFTER_EACH_ANNOTATION);
+                } catch (InvocationTargetException | IllegalAccessException ex) {
+                    ex.printStackTrace();
+                }
+                continue;
+            }
+
 
             try {
                 method.invoke(classObject);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    invokeMethods(testAnnotationMethodsMap, classObject, AFTER_EACH_ANNOTATION);
+                } catch (InvocationTargetException | IllegalAccessException ex) {
+                    ex.printStackTrace();
+                }
             }
 
-            invokeMethod(testAnnotationMethodsMap, classObject, AFTER_EACH_ANNOTATION);
-        });
+        }
     }
 
     /**
@@ -71,10 +85,25 @@ public class TestCore {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private static void invoke(Map<String, List<Method>> testAnnotationMethodsMap, Constructor<?> constructor) throws InvocationTargetException, IllegalAccessException, InstantiationException {
-        invokeMethod(testAnnotationMethodsMap, null, BEFORE_ALL_ANNOTATION);
+    private static void invoke(Map<String, List<Method>> testAnnotationMethodsMap, Constructor<?> constructor) {
+        try {
+            invokeMethods(testAnnotationMethodsMap, null, BEFORE_ALL_ANNOTATION);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+            try {
+                invokeMethods(testAnnotationMethodsMap, null, AFTER_ALL_ANNOTATION);
+            } catch (InvocationTargetException | IllegalAccessException ex) {
+                ex.printStackTrace();
+            }
+            return;
+        }
         invokeTestMethods(constructor, testAnnotationMethodsMap);
-        invokeMethod(testAnnotationMethodsMap, null, AFTER_ALL_ANNOTATION);
+
+        try {
+            invokeMethods(testAnnotationMethodsMap, null, AFTER_ALL_ANNOTATION);
+        } catch (InvocationTargetException | IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
