@@ -19,9 +19,10 @@ public class TestCore {
 
     /**
      * Выполнить методы, которые не помечены аннотацией @Test (@BeforeAll, @BeforeEach, @AfterEach, @AfterAll)
+     *
      * @param testAnnotationMethodsMap набор методов, помеченные аннотациями @Test, @BeforeAll, @BeforeEach, @AfterEach, @AfterAll
-     * @param classObject объект тестируемого класс
-     * @param annotationName наименование аннотации
+     * @param classObject              объект тестируемого класс
+     * @param annotationName           наименование аннотации
      */
     private static void invokeMethods(Map<String, List<Method>> testAnnotationMethodsMap, Object classObject, String annotationName) throws InvocationTargetException, IllegalAccessException {
         List<Method> methods = testAnnotationMethodsMap.get(annotationName);
@@ -33,13 +34,14 @@ public class TestCore {
 
     /**
      * Выполнить методы, которые помечены аннотацией @Test
-     * @param constructor констуктор по умолчанию тестируемого класса
+     *
+     * @param constructor              констуктор по умолчанию тестируемого класса
      * @param testAnnotationMethodsMap набор методов, помеченные аннотациями @Test, @BeforeAll, @BeforeEach, @AfterEach, @AfterAll
      */
     private static void invokeTestMethods(Constructor<?> constructor, Map<String, List<Method>> testAnnotationMethodsMap) {
         List<Method> methods = testAnnotationMethodsMap.get(TEST_ANNOTATION);
 
-        for(Method method : methods) {
+        for (Method method : methods) {
             Object classObject = null;
             try {
                 classObject = constructor.newInstance();
@@ -47,7 +49,6 @@ public class TestCore {
                 e.printStackTrace();
                 continue;
             }
-
 
             try {
                 invokeMethods(testAnnotationMethodsMap, classObject, BEFORE_EACH_ANNOTATION);
@@ -60,7 +61,6 @@ public class TestCore {
                 }
                 continue;
             }
-
 
             try {
                 method.invoke(classObject);
@@ -79,11 +79,9 @@ public class TestCore {
 
     /**
      * Выполнить все методы, помеченные аннотациями для теста
+     *
      * @param testAnnotationMethodsMap набор методов, помеченные аннотациями @Test, @BeforeAll, @BeforeEach, @AfterEach, @AfterAll
-     * @param constructor констуктор по умолчанию тестируемого класса
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
+     * @param constructor              констуктор по умолчанию тестируемого класса
      */
     private static void invoke(Map<String, List<Method>> testAnnotationMethodsMap, Constructor<?> constructor) {
         try {
@@ -97,6 +95,7 @@ public class TestCore {
             }
             return;
         }
+
         invokeTestMethods(constructor, testAnnotationMethodsMap);
 
         try {
@@ -108,6 +107,7 @@ public class TestCore {
 
     /**
      * Получить методы, необходимые для теста
+     *
      * @param methods все публичные методы тестируемого класса
      * @return набор методов, помеченные аннотациями @Test, @BeforeAll, @BeforeEach, @AfterEach, @AfterAll
      */
