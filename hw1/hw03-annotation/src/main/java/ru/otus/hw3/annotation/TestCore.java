@@ -6,6 +6,12 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class TestCore {
+    private static final String TEST_ANNOTATION = "Test";
+    private static final String BEFORE_ALL_ANNOTATION = "BeforeAll";
+    private static final String BEFORE_EACH_ANNOTATION = "BeforeEach";
+    private static final String AFTER_EACH_ANNOTATION = "AfterEach";
+    private static final String AFTER_ALL_ANNOTATION = "AfterAll";
+
     public static void run(Class<?> clazz) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         Map<String, List<Method>> testAnnotationMethodsMap = getMethodsWithAnnotationsForTest(clazz.getMethods());
         invoke(testAnnotationMethodsMap, clazz.getConstructor());
@@ -16,34 +22,45 @@ public class TestCore {
      * @param testAnnotationMethodsMap набор методов, помеченные аннотациями @Test, @BeforeAll, @BeforeEach, @AfterEach, @AfterAll
      * @param classObject объект тестируемого класс
      * @param annotationName наименование аннотации
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
      */
-    private static void invokeMethod(Map<String, List<Method>> testAnnotationMethodsMap, Object classObject, String annotationName) throws InvocationTargetException, IllegalAccessException {
+    private static void invokeMethod(Map<String, List<Method>> testAnnotationMethodsMap, Object classObject, String annotationName) {
         List<Method> methods = testAnnotationMethodsMap.get(annotationName);
 
-        for (Method method : methods) {
-            method.invoke(classObject);
-        }
+        methods.forEach(method -> {
+            try {
+                method.invoke(classObject);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
      * Выполнить методы, которые помечены аннотацией @Test
      * @param constructor констуктор по умолчанию тестируемого класса
      * @param testAnnotationMethodsMap набор методов, помеченные аннотациями @Test, @BeforeAll, @BeforeEach, @AfterEach, @AfterAll
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
-     * @throws InstantiationException
      */
-    private static void invokeTestMethod(Constructor<?> constructor, Map<String, List<Method>> testAnnotationMethodsMap) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        List<Method> methods = testAnnotationMethodsMap.get("Test");
+    private static void invokeTestMethods(Constructor<?> constructor, Map<String, List<Method>> testAnnotationMethodsMap) {
+        List<Method> methods = testAnnotationMethodsMap.get(TEST_ANNOTATION);
 
-        for (Method method : methods) {
-            Object classObject = constructor.newInstance();
-            invokeMethod(testAnnotationMethodsMap, classObject, "BeforeEach");
-            method.invoke(classObject);
-            invokeMethod(testAnnotationMethodsMap, classObject, "AfterEach");
-        }
+        methods.forEach(method -> {
+            Object classObject = null;
+            try {
+                classObject = constructor.newInstance();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
+            invokeMethod(testAnnotationMethodsMap, classObject, BEFORE_EACH_ANNOTATION);
+
+            try {
+                method.invoke(classObject);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
+            invokeMethod(testAnnotationMethodsMap, classObject, AFTER_EACH_ANNOTATION);
+        });
     }
 
     /**
@@ -55,9 +72,9 @@ public class TestCore {
      * @throws InstantiationException
      */
     private static void invoke(Map<String, List<Method>> testAnnotationMethodsMap, Constructor<?> constructor) throws InvocationTargetException, IllegalAccessException, InstantiationException {
-        invokeMethod(testAnnotationMethodsMap, null, "BeforeAll");
-        invokeTestMethod(constructor, testAnnotationMethodsMap);
-        invokeMethod(testAnnotationMethodsMap, null, "AfterAll");
+        invokeMethod(testAnnotationMethodsMap, null, BEFORE_ALL_ANNOTATION);
+        invokeTestMethods(constructor, testAnnotationMethodsMap);
+        invokeMethod(testAnnotationMethodsMap, null, AFTER_ALL_ANNOTATION);
     }
 
     /**
@@ -70,15 +87,15 @@ public class TestCore {
 
         for (Method method : methods) {
             if (method.isAnnotationPresent(BeforeEach.class)) {
-                testAnnotationMethodsMap.computeIfAbsent("BeforeEach", k -> new ArrayList<>()).add(method);
+                testAnnotationMethodsMap.computeIfAbsent(BEFORE_EACH_ANNOTATION, k -> new ArrayList<>()).add(method);
             } else if (method.isAnnotationPresent(AfterEach.class)) {
-                testAnnotationMethodsMap.computeIfAbsent("AfterEach", k -> new ArrayList<>()).add(method);
+                testAnnotationMethodsMap.computeIfAbsent(AFTER_EACH_ANNOTATION, k -> new ArrayList<>()).add(method);
             } else if (method.isAnnotationPresent(Test.class)) {
-                testAnnotationMethodsMap.computeIfAbsent("Test", k -> new ArrayList<>()).add(method);
+                testAnnotationMethodsMap.computeIfAbsent(TEST_ANNOTATION, k -> new ArrayList<>()).add(method);
             } else if (method.isAnnotationPresent(BeforeAll.class)) {
-                testAnnotationMethodsMap.computeIfAbsent("BeforeAll", k -> new ArrayList<>()).add(method);
+                testAnnotationMethodsMap.computeIfAbsent(BEFORE_ALL_ANNOTATION, k -> new ArrayList<>()).add(method);
             } else if (method.isAnnotationPresent(AfterAll.class)) {
-                testAnnotationMethodsMap.computeIfAbsent("AfterAll", k -> new ArrayList<>()).add(method);
+                testAnnotationMethodsMap.computeIfAbsent(AFTER_ALL_ANNOTATION, k -> new ArrayList<>()).add(method);
             }
         }
 
