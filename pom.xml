@@ -11,6 +11,7 @@
     <modules>
         <module>hw01-maven</module>
         <module>hw02-list</module>
+        <module>hw03-annotation</module>
     </modules>
 
     <properties>
