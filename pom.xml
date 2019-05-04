@@ -12,6 +12,7 @@
         <module>hw01-maven</module>
         <module>hw02-list</module>
         <module>hw03-annotation</module>
+        <module>hw4-aop</module>
     </modules>
 
     <properties>
