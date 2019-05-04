@@ -4,12 +4,12 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
-public class MyInvocationHandler<T> implements InvocationHandler {
+public class MyInvocationHandler implements InvocationHandler {
 
-    private final T interfaceClass;
+    private final Object interfaceClass;
 
     MyInvocationHandler(Object interfaceClass) {
-        this.interfaceClass = (T)interfaceClass;
+        this.interfaceClass = interfaceClass;
     }
 
     @Override
