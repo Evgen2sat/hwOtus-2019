@@ -19,14 +19,14 @@ public class MyInvocationHandler implements InvocationHandler {
         Method[] methods = interfaceClass.getClass().getMethods();
         for (Method method : methods) {
             if (method.isAnnotationPresent(Log.class)) {
-                markedLogAnnotationMethodSet.add(method.getName() + Arrays.toString(method.getParameters()));
+                markedLogAnnotationMethodSet.add(getMethodName(method));
             }
         }
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (markedLogAnnotationMethodSet.contains(method.getName() + Arrays.toString(method.getParameters()))) {
+        if (markedLogAnnotationMethodSet.contains(getMethodName(method))) {
             StringBuilder paramsLog = new StringBuilder(method.getName())
                     .append(": ");
 
@@ -42,5 +42,9 @@ public class MyInvocationHandler implements InvocationHandler {
             System.out.println(paramsLog);
         }
         return method.invoke(interfaceClass, args);
+    }
+
+    private String getMethodName(Method method) {
+        return (method.getName() + Arrays.toString(method.getParameters()));
     }
 }
