@@ -13,6 +13,7 @@
         <module>hw02-list</module>
         <module>hw03-annotation</module>
         <module>hw4-aop</module>
+        <module>hw5-gc</module>
     </modules>
 
     <properties>
