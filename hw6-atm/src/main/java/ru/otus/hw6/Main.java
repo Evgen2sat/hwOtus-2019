@@ -14,12 +14,16 @@ public class Main {
 
         System.out.println("\n");
 
-        int issueSum = 10_000;
+        int issueSum = 100;
 
         System.out.println("Запрашивается: " + issueSum);
         int issuedSum = atm.getCash(issueSum);
-        System.out.println("Выдано: " + issuedSum);
-        System.out.println("Не выдано: " + (issueSum - issuedSum));
-        System.out.println("Баланс: " + atm.getBalance());
+        if (issuedSum == 0) {
+            System.out.println("В банкомате не хватает средств");
+        } else {
+            System.out.println("Выдано: " + issuedSum);
+            System.out.println("Не выдано: " + (issueSum - issuedSum));
+            System.out.println("Баланс: " + atm.getBalance());
+        }
     }
 }

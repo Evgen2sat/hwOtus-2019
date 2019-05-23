@@ -1,6 +1,6 @@
 package ru.otus.hw6;
 
-public class Cell {
+public class Cell implements Comparable<Cell> {
     /**
      * Количество купюр
      */
@@ -45,5 +45,16 @@ public class Cell {
      */
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public int compareTo(Cell item) {
+        if(value == item.getValue()) {
+            return 0;
+        } else if(value < item.getValue()) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 }

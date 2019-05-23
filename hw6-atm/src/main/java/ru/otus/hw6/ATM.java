@@ -11,7 +11,6 @@ public class ATM {
     private final Cell cell_2000;
     private final Cell cell_5000;
 
-    //private final Map<Integer, Cell> cells;
     private final Set<Cell> cells;
 
     public ATM() {
@@ -23,16 +22,7 @@ public class ATM {
         cell_2000 = new Cell(2000);
         cell_5000 = new Cell(5000);
 
-        //cells = new TreeMap<>(Collections.reverseOrder());
-//        cells.put(50, cell_50);
-//        cells.put(100, cell_100);
-//        cells.put(200, cell_200);
-//        cells.put(500, cell_500);
-//        cells.put(1000, cell_1000);
-//        cells.put(2000, cell_2000);
-//        cells.put(5000, cell_5000);
-
-        cells = new HashSet<>();
+        cells = new TreeSet<>(Collections.reverseOrder());
         cells.add(cell_50);
         cells.add(cell_100);
         cells.add(cell_200);
@@ -46,20 +36,6 @@ public class ATM {
     public int addCash(int sum) {
         int tmpSum = sum;
         int insertedSum = 0;
-
-//        for(var cell : cells.entrySet()) {
-//
-//            if(insertedSum == sum) {
-//                break;
-//            }
-//
-//            int countBill = tmpSum / cell.getValue().getValue();
-//            if(countBill > 0) {
-//                cell.getValue().addBill(countBill);
-//                insertedSum += countBill*cell.getValue().getValue();
-//                tmpSum -= insertedSum;
-//            }
-//        }
 
         for(var cell : cells) {
 
@@ -81,25 +57,6 @@ public class ATM {
     public int getCash(int sum) {
         int tmpSum = sum;
         int issuedSum = 0;
-
-//        for (var cell : cells.entrySet()) {
-//
-//            if(issuedSum == sum) {
-//                break;
-//            }
-//
-//            int countBill = tmpSum / cell.getValue().getValue();
-//            if(countBill > 0 && cell.getValue().getCount() > 0) {
-//                if(countBill > cell.getValue().getCount()) {
-//                    issuedSum += cell.getValue().getValue()*cell.getValue().getCount();
-//                    cell.getValue().getBill(cell.getValue().getCount());
-//                } else {
-//                    issuedSum += cell.getValue().getValue()*countBill;
-//                    cell.getValue().getBill(countBill);
-//                }
-//                tmpSum -= issuedSum;
-//            }
-//        }
 
         for (var cell : cells) {
 
