@@ -14,6 +14,7 @@
         <module>hw03-annotation</module>
         <module>hw4-aop</module>
         <module>hw5-gc</module>
+        <module>hw6-atm</module>
     </modules>
 
     <properties>
