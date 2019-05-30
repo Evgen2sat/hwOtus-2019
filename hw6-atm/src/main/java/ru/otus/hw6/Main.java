@@ -54,14 +54,10 @@ public class Main {
         insertedCash4.put(7, BillValue.Value_5000);
 
         DepartmentATM departmentATM = new DepartmentATM();
-        ATMImpl atm1 = departmentATM.createAtm(atmConfig1);
-        atm1.addCash(insertedCash1);
-        ATMImpl atm2 = departmentATM.createAtm(atmConfig2);
-        atm2.addCash(insertedCash2);
-        ATMImpl atm3 = departmentATM.createAtm(atmConfig3);
-        atm3.addCash(insertedCash3);
-        ATMImpl atm4 = departmentATM.createAtm(atmConfig4);
-        atm4.addCash(insertedCash4);
+        ATMImpl atm1 = departmentATM.createAtm(atmConfig1, insertedCash1);
+        ATMImpl atm2 = departmentATM.createAtm(atmConfig2, insertedCash2);
+        ATMImpl atm3 = departmentATM.createAtm(atmConfig3, insertedCash3);
+        ATMImpl atm4 = departmentATM.createAtm(atmConfig4, insertedCash4);
 
         departmentATM.getBalanceFromAllATM();
 

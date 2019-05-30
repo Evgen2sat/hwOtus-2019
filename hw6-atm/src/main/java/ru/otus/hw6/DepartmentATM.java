@@ -12,8 +12,9 @@ public class DepartmentATM {
         atmList = new ArrayList<>();
     }
 
-    public ATMImpl createAtm(List<BillValue> atmConfig) {
+    public ATMImpl createAtm(List<BillValue> atmConfig, Map<Integer, BillValue> startBills) {
         ATMImpl atm = new ATMImpl(atmConfig, atmList.size() + 1);
+        atm.addCash(startBills);
         atmList.add(atm);
         return atm;
     }
