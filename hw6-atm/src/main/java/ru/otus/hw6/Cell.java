@@ -9,7 +9,7 @@ public class Cell implements Comparable<Cell> {
     /**
      * Номинал
      */
-    private BillValue value;
+    private final BillValue value;
 
     public Cell(BillValue value) {
         this.value = value;
@@ -49,13 +49,7 @@ public class Cell implements Comparable<Cell> {
 
     @Override
     public int compareTo(Cell item) {
-        if(value.getValue() == item.getValue().getValue()) {
-            return 0;
-        } else if(value.getValue() < item.getValue().getValue()) {
-            return -1;
-        } else {
-            return 1;
-        }
+        return Integer.compare(value.getValue(), item.getValue().getValue());
     }
 
     @Override
