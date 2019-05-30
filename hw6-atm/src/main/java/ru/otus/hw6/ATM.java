@@ -3,89 +3,82 @@ package ru.otus.hw6;
 import java.util.*;
 
 public class ATM {
-    private final Cell cell_50;
-    private final Cell cell_100;
-    private final Cell cell_200;
-    private final Cell cell_500;
-    private final Cell cell_1000;
-    private final Cell cell_2000;
-    private final Cell cell_5000;
 
+    /**
+     * Ячейки под купюры
+     */
     private final Set<Cell> cells;
 
-    public ATM() {
-        cell_50 = new Cell(50);
-        cell_100 = new Cell(100);
-        cell_200 = new Cell(200);
-        cell_500 = new Cell(500);
-        cell_1000 = new Cell(1000);
-        cell_2000 = new Cell(2000);
-        cell_5000 = new Cell(5000);
+    /**
+     * Номинал купюры-ячейка
+     */
+    private final Map<BillValue, Cell> cellsMap = new HashMap<>();
 
+    public ATM(List<BillValue> cellsConfig) {
         cells = new TreeSet<>(Collections.reverseOrder());
-        cells.add(cell_50);
-        cells.add(cell_100);
-        cells.add(cell_200);
-        cells.add(cell_500);
-        cells.add(cell_1000);
-        cells.add(cell_2000);
-        cells.add(cell_5000);
+        cellsConfig.forEach(cellValue -> {
+            Cell cell = new Cell(cellValue);
+            cells.add(cell);
+            cellsMap.put(cellValue, cell);
+        });
     }
 
 
-    public int addCash(int sum) {
-        int tmpSum = sum;
-        int insertedSum = 0;
+    public Map<Integer, BillValue> addCash(Map<Integer, BillValue> bills) {
 
-        for(var cell : cells) {
+        Map<Integer, BillValue> result = new HashMap<>();
 
-            if(insertedSum == sum) {
-                break;
-            }
-
-            int countBill = tmpSum / cell.getValue();
-            if(countBill > 0) {
-                cell.addBill(countBill);
-                insertedSum += countBill*cell.getValue();
-                tmpSum -= insertedSum;
+        for(var bill : bills.entrySet()) {
+            Cell cell = cellsMap.get(bill.getValue());
+            if(cell != null) {
+                cell.addBill(bill.getKey());
+                result.put(bill.getKey(), bill.getValue());
             }
         }
 
-        return insertedSum;
+        return result;
     }
 
-    public int getCash(int sum) {
+    public Map<Integer, BillValue> getCash(int sum) {
+        Map<Integer, BillValue> result = new HashMap<>();
+
         int tmpSum = sum;
-        int issuedSum = 0;
 
-        for (var cell : cells) {
+        for (Cell cell : cells) {
 
-            if(issuedSum == sum) {
+            if(getSumInPackBills(result) == sum) {
                 break;
             }
 
-            int countBill = tmpSum / cell.getValue();
+            int countBill = tmpSum / cell.getValue().getValue();
             if(countBill > 0 && cell.getCount() > 0) {
                 if(countBill > cell.getCount()) {
-                    issuedSum += cell.getValue()*cell.getCount();
+                    result.put(cell.getCount(), cell.getValue());
                     cell.getBill(cell.getCount());
                 } else {
-                    issuedSum += cell.getValue()*countBill;
+                    result.put(countBill, cell.getValue());
                     cell.getBill(countBill);
                 }
-                tmpSum -= issuedSum;
             }
         }
 
-        if(issuedSum != sum) {
-            addCash(issuedSum);
-            return 0;
+        if(getSumInPackBills(result) != sum) {
+            addCash(result);
+            return new HashMap<>();
         }
 
-        return issuedSum;
+        return result;
     }
 
-    public int getBalance() {
-        return cells.stream().mapToInt(cell -> cell.getCount() * cell.getValue()).sum();
+    public Set<Cell> getBalance() {
+        return cells;
+    }
+
+    public int getBalanceSum() {
+        return cells.stream().mapToInt(cell -> cell.getCount()*cell.getValue().getValue()).sum();
+    }
+
+    public static int getSumInPackBills(Map<Integer, BillValue> bills) {
+        return bills.entrySet().stream().mapToInt(item -> item.getKey()*item.getValue().getValue()).sum();
     }
 }

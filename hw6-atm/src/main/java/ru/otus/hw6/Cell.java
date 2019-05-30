@@ -9,9 +9,9 @@ public class Cell implements Comparable<Cell> {
     /**
      * Номинал
      */
-    private int value;
+    private BillValue value;
 
-    public Cell(int value) {
+    public Cell(BillValue value) {
         this.value = value;
     }
 
@@ -43,18 +43,26 @@ public class Cell implements Comparable<Cell> {
      * Получить номинал
      * @return
      */
-    public int getValue() {
+    public BillValue getValue() {
         return value;
     }
 
     @Override
     public int compareTo(Cell item) {
-        if(value == item.getValue()) {
+        if(value.getValue() == item.getValue().getValue()) {
             return 0;
-        } else if(value < item.getValue()) {
+        } else if(value.getValue() < item.getValue().getValue()) {
             return -1;
         } else {
             return 1;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "count=" + count +
+                ", value=" + value +
+                '}';
     }
 }
