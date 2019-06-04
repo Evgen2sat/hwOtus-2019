@@ -1,5 +1,7 @@
 package ru.otus.hw6;
 
+import ru.otus.hw6.memento.Memento;
+
 import java.util.*;
 
 import static ru.otus.hw6.DepartmentATM.getSumInPackBills;
@@ -14,10 +16,9 @@ public class ATMImpl implements ATM {
     /**
      * Номинал купюры-ячейка
      */
+    private final Map<BillValue, Cell> cellsMap = new HashMap<>();
 
     private final int number;
-
-    private final Map<BillValue, Cell> cellsMap = new HashMap<>();
 
     public ATMImpl(List<BillValue> cellsConfig, int number) {
         cells = new TreeSet<>(Collections.reverseOrder());
@@ -30,14 +31,14 @@ public class ATMImpl implements ATM {
     }
 
     @Override
-    public Map<Integer, BillValue> addCash(Map<Integer, BillValue> bills) {
+    public Map<BillValue, Integer> addCash(Map<BillValue, Integer> bills) {
 
-        Map<Integer, BillValue> result = new HashMap<>();
+        Map<BillValue, Integer> result = new HashMap<>();
 
         for(var bill : bills.entrySet()) {
-            Cell cell = cellsMap.get(bill.getValue());
+            Cell cell = cellsMap.get(bill.getKey());
             if(cell != null) {
-                cell.addBill(bill.getKey());
+                cell.addBill(bill.getValue());
                 result.put(bill.getKey(), bill.getValue());
             }
         }
@@ -46,8 +47,8 @@ public class ATMImpl implements ATM {
     }
 
     @Override
-    public Map<Integer, BillValue> getCash(int sum) {
-        Map<Integer, BillValue> result = new HashMap<>();
+    public Map<BillValue, Integer> getCash(int sum) {
+        Map<BillValue, Integer> result = new HashMap<>();
 
         int tmpSum = sum;
 
@@ -60,10 +61,10 @@ public class ATMImpl implements ATM {
             int countBill = tmpSum / cell.getValue().getValue();
             if(countBill > 0 && cell.getCount() > 0) {
                 if(countBill > cell.getCount()) {
-                    result.put(cell.getCount(), cell.getValue());
+                    result.put(cell.getValue(), cell.getCount());
                     cell.getBill(cell.getCount());
                 } else {
-                    result.put(countBill, cell.getValue());
+                    result.put(cell.getValue(), countBill);
                     cell.getBill(countBill);
                 }
             }
@@ -78,7 +79,7 @@ public class ATMImpl implements ATM {
     }
 
     @Override
-    public Set<Cell> getBalance() {
+    public Set<Cell> getCells() {
         return cells;
     }
 
@@ -95,5 +96,15 @@ public class ATMImpl implements ATM {
     @Override
     public int getNumber() {
         return number;
+    }
+
+    @Override
+    public Memento saveState() {
+        return new Memento(this);
+    }
+
+    @Override
+    public ATM restoreState(Memento memento) {
+        return memento.getState();
     }
 }

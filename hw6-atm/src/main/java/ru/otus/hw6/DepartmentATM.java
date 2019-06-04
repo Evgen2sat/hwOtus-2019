@@ -1,30 +1,48 @@
 package ru.otus.hw6;
 
+import ru.otus.hw6.memento.Memento;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class DepartmentATM {
 
-    private final List<ATM> atmList;
+    private List<ATM> atmList;
+    private final List<Memento> mementoList;
 
     DepartmentATM() {
         atmList = new ArrayList<>();
+        mementoList = new ArrayList<>();
     }
 
-    public ATMImpl createAtm(List<BillValue> atmConfig, Map<Integer, BillValue> startBills) {
+    public ATMImpl createAtm(List<BillValue> atmConfig, Map<BillValue, Integer> startBills) {
         ATMImpl atm = new ATMImpl(atmConfig, atmList.size() + 1);
         atm.addCash(startBills);
+        mementoList.add(atm.saveState());
         atmList.add(atm);
         return atm;
     }
 
-    public static int getSumInPackBills(Map<Integer, BillValue> bills) {
-        return bills.entrySet().stream().mapToInt(item -> item.getKey()*item.getValue().getValue()).sum();
+    public static int getSumInPackBills(Map<BillValue, Integer> bills) {
+        return bills.entrySet().stream().mapToInt(item -> item.getKey().getValue()*item.getValue()).sum();
     }
 
     public void getBalanceFromAllATM() {
         Visitor visitor = new GrabberATMBalanceVisitor();
         atmList.forEach(atm -> atm.getBalance(visitor));
+    }
+
+//    public void saveState() {
+//        this.memento = new Memento(atmList);
+//    }
+//
+    public void restoreState() {
+        List<ATM> tmpAtmList = new ArrayList<>();
+        for(Memento memento : mementoList) {
+            tmpAtmList.add(memento.getState());
+        }
+
+        this.atmList = tmpAtmList;
     }
 }

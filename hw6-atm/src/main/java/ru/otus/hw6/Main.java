@@ -31,27 +31,27 @@ public class Main {
         atmConfig4.add(BillValue.Value_2000);
         atmConfig4.add(BillValue.Value_5000);
 
-        Map<Integer, BillValue> insertedCash1 = new HashMap<>();
-        insertedCash1.put(10, BillValue.Value_50);
-        insertedCash1.put(20, BillValue.Value_100);
+        Map<BillValue, Integer> insertedCash1 = new HashMap<>();
+        insertedCash1.put(BillValue.Value_50, 10);
+        insertedCash1.put(BillValue.Value_100, 20);
 
-        Map<Integer, BillValue> insertedCash2 = new HashMap<>();
-        insertedCash2.put(10, BillValue.Value_200);
-        insertedCash2.put(20, BillValue.Value_500);
+        Map<BillValue, Integer> insertedCash2 = new HashMap<>();
+        insertedCash2.put(BillValue.Value_200, 10);
+        insertedCash2.put(BillValue.Value_500, 20);
 
-        Map<Integer, BillValue> insertedCash3 = new HashMap<>();
-        insertedCash3.put(10, BillValue.Value_1000);
-        insertedCash3.put(20, BillValue.Value_2000);
-        insertedCash3.put(30, BillValue.Value_5000);
+        Map<BillValue, Integer> insertedCash3 = new HashMap<>();
+        insertedCash3.put(BillValue.Value_1000, 10);
+        insertedCash3.put(BillValue.Value_2000, 20);
+        insertedCash3.put(BillValue.Value_5000, 30);
 
-        Map<Integer, BillValue> insertedCash4 = new HashMap<>();
-        insertedCash4.put(1, BillValue.Value_50);
-        insertedCash4.put(2, BillValue.Value_100);
-        insertedCash4.put(3, BillValue.Value_200);
-        insertedCash4.put(4, BillValue.Value_500);
-        insertedCash4.put(5, BillValue.Value_1000);
-        insertedCash4.put(6, BillValue.Value_2000);
-        insertedCash4.put(7, BillValue.Value_5000);
+        Map<BillValue, Integer> insertedCash4 = new HashMap<>();
+        insertedCash4.put(BillValue.Value_50, 1);
+        insertedCash4.put(BillValue.Value_100, 2);
+        insertedCash4.put(BillValue.Value_200, 3);
+        insertedCash4.put(BillValue.Value_500, 4);
+        insertedCash4.put(BillValue.Value_1000, 5);
+        insertedCash4.put(BillValue.Value_2000, 6);
+        insertedCash4.put(BillValue.Value_5000, 7);
 
         DepartmentATM departmentATM = new DepartmentATM();
         ATMImpl atm1 = departmentATM.createAtm(atmConfig1, insertedCash1);
@@ -59,6 +59,18 @@ public class Main {
         ATMImpl atm3 = departmentATM.createAtm(atmConfig3, insertedCash3);
         ATMImpl atm4 = departmentATM.createAtm(atmConfig4, insertedCash4);
 
+        departmentATM.getBalanceFromAllATM();
+        //departmentATM.saveState();
+
+        atm1.addCash(insertedCash1);
+        atm2.addCash(insertedCash2);
+
+        System.out.println("\n");
+        departmentATM.getBalanceFromAllATM();
+
+        departmentATM.restoreState();
+
+        System.out.println("\n");
         departmentATM.getBalanceFromAllATM();
 
 //        Map<Integer, BillValue> insertedCash = new HashMap<>();
