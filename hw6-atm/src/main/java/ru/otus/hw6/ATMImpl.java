@@ -107,4 +107,15 @@ public class ATMImpl implements ATM {
     public ATM restoreState(Memento memento) {
         return memento.getState();
     }
+
+    @Override
+    public void setCells(Set<Cell> cells) {
+        this.cells.clear();
+        this.cellsMap.clear();
+
+        cells.forEach(cell -> {
+            this.cells.add(cell);
+            cellsMap.put(cell.getValue(), cell);
+        });
+    }
 }

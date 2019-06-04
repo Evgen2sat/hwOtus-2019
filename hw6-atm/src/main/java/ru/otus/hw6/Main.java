@@ -60,52 +60,16 @@ public class Main {
         ATMImpl atm4 = departmentATM.createAtm(atmConfig4, insertedCash4);
 
         departmentATM.getBalanceFromAllATM();
-        //departmentATM.saveState();
 
         atm1.addCash(insertedCash1);
         atm2.addCash(insertedCash2);
 
-        System.out.println("\n");
+        System.out.println("После внесения наличных\n");
         departmentATM.getBalanceFromAllATM();
 
         departmentATM.restoreState();
 
-        System.out.println("\n");
+        System.out.println("После восстановления состояния\n");
         departmentATM.getBalanceFromAllATM();
-
-//        Map<Integer, BillValue> insertedCash = new HashMap<>();
-//        insertedCash.put(5, BillValue.Value_1000);
-//        insertedCash.put(29, BillValue.Value_5000);
-//        insertedCash.put(1, BillValue.Value_100);
-//
-//        int insertSum = getSumInPackBills(insertedCash);
-//
-//        System.out.println("Вносится: " + insertSum);
-//        Map<Integer, BillValue> insertedBills = atm.addCash(insertedCash);
-//        System.out.println("Внесены купюры:");
-//        //insertedBills.forEach((key, value) -> System.out.println(value.getValue() + ": " + key));
-//        System.out.println(insertedBills);
-//        System.out.println("Внесено: " + getSumInPackBills(insertedBills));
-//        System.out.println("Возвращено: " + (insertSum - getSumInPackBills(insertedBills)));
-//        System.out.println("Баланс: " + atm.getBalance());
-//        System.out.println("Баланс: " + atm.getBalanceSum());
-//
-//        System.out.println("\n");
-//
-//        int issueSum = 4000;
-//
-//        System.out.println("Запрашивается: " + issueSum);
-//        Map<Integer, BillValue> issuedBills = atm.getCash(issueSum);
-//        if (issuedBills.isEmpty()) {
-//            System.out.println("В банкомате не хватает средств");
-//        } else {
-//            System.out.println("Выдано: " + getSumInPackBills(issuedBills));
-//            System.out.println("Выданы купюры:");
-//            //issuedBills.forEach((key, value) -> System.out.println(value.getValue() + ": " + key));
-//            System.out.println(issuedBills);
-//            System.out.println("Не выдано: " + (issueSum - getSumInPackBills(issuedBills)));
-//            System.out.println("Баланс: " + atm.getBalance());
-//            System.out.println("Баланс: " + atm.getBalanceSum());
-//        }
     }
 }

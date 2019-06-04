@@ -33,10 +33,6 @@ public class DepartmentATM {
         atmList.forEach(atm -> atm.getBalance(visitor));
     }
 
-//    public void saveState() {
-//        this.memento = new Memento(atmList);
-//    }
-//
     public void restoreState() {
         List<ATM> tmpAtmList = new ArrayList<>();
         for(Memento memento : mementoList) {
