@@ -37,6 +37,6 @@ public class DepartmentATM {
     public void restoreState() {
         this.atmList.clear();
 
-        mementoList.entrySet().forEach(item -> this.atmList.add(item.getKey().restoreState(item.getValue())));
+        mementoList.forEach((key, value) -> this.atmList.add(key.restoreState(value)));
     }
 }
