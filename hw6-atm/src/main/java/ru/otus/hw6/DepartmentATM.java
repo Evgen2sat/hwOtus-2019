@@ -3,23 +3,24 @@ package ru.otus.hw6;
 import ru.otus.hw6.memento.Memento;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class DepartmentATM {
 
     private List<ATM> atmList;
-    private final List<Memento> mementoList;
+    private final Map<ATM, Memento> mementoList;
 
     DepartmentATM() {
         atmList = new ArrayList<>();
-        mementoList = new ArrayList<>();
+        mementoList = new HashMap<>();
     }
 
     public ATMImpl createAtm(List<BillValue> atmConfig, Map<BillValue, Integer> startBills) {
         ATMImpl atm = new ATMImpl(atmConfig, atmList.size() + 1);
         atm.addCash(startBills);
-        mementoList.add(atm.saveState());
+        mementoList.put(atm, atm.saveState());
         atmList.add(atm);
         return atm;
     }
@@ -34,11 +35,8 @@ public class DepartmentATM {
     }
 
     public void restoreState() {
-        List<ATM> tmpAtmList = new ArrayList<>();
-        for(Memento memento : mementoList) {
-            tmpAtmList.add(memento.getState());
-        }
+        this.atmList.clear();
 
-        this.atmList = tmpAtmList;
+        mementoList.entrySet().forEach(item -> this.atmList.add(item.getKey().restoreState(item.getValue())));
     }
 }
