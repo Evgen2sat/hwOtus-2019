@@ -59,17 +59,27 @@ public class Main {
         ATMImpl atm3 = departmentATM.createAtm(atmConfig3, insertedCash3);
         ATMImpl atm4 = departmentATM.createAtm(atmConfig4, insertedCash4);
 
+        System.out.println("Начальное состояние");
         departmentATM.getBalanceFromAllATM();
 
-        atm1.addCash(insertedCash1);
-        atm2.addCash(insertedCash2);
+        AddCashCommand addCashCommand1 = new AddCashCommand(atm1, insertedCash1);
+        addCashCommand1.execute();
 
-        System.out.println("После внесения наличных\n");
+        AddCashCommand addCashCommand2 = new AddCashCommand(atm2, insertedCash2);
+        addCashCommand2.execute();
+
+        System.out.println("\nПосле внесения наличных");
+        departmentATM.getBalanceFromAllATM();
+
+        GetCashCommand getCashCommand3 = new GetCashCommand(atm3, 15000);
+        getCashCommand3.execute();
+
+        System.out.println("\nПосле получения наличных");
         departmentATM.getBalanceFromAllATM();
 
         departmentATM.restoreState();
 
-        System.out.println("После восстановления состояния\n");
+        System.out.println("\nПосле восстановления состояния");
         departmentATM.getBalanceFromAllATM();
     }
 }

@@ -1,4 +1,4 @@
-package ru.otus.hw6.memento;
+package ru.otus.hw6;
 
 import ru.otus.hw6.ATM;
 import ru.otus.hw6.ATMImpl;

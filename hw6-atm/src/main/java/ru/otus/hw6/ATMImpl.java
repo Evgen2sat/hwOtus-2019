@@ -1,7 +1,5 @@
 package ru.otus.hw6;
 
-import ru.otus.hw6.memento.Memento;
-
 import java.util.*;
 
 import static ru.otus.hw6.DepartmentATM.getSumInPackBills;
