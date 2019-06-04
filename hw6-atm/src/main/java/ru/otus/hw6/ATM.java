@@ -12,7 +12,7 @@ public interface ATM {
 
     int getBalanceSum();
 
-    void accept(Visitor visitor);
+    void getBalance(Visitor visitor);
 
     int getNumber();
 }

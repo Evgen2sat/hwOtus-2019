@@ -88,7 +88,7 @@ public class ATMImpl implements ATM {
     }
 
     @Override
-    public void accept(Visitor visitor) {
+    public void getBalance(Visitor visitor) {
         visitor.visitATM(this);
     }
 

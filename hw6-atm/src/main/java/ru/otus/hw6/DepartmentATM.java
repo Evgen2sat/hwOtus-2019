@@ -25,6 +25,6 @@ public class DepartmentATM {
 
     public void getBalanceFromAllATM() {
         Visitor visitor = new GrabberATMBalanceVisitor();
-        atmList.forEach(atm -> atm.accept(visitor));
+        atmList.forEach(atm -> atm.getBalance(visitor));
     }
 }
