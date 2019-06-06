@@ -15,12 +15,19 @@ public class DepartmentATM {
         mementoList = new HashMap<>();
     }
 
-    public ATMImpl createAtm(List<BillValue> atmConfig, Map<BillValue, Integer> startBills) {
-        ATMImpl atm = new ATMImpl(atmConfig, atmList.size() + 1);
-        atm.addCash(startBills);
+//    public ATM createAtm(List<BillValue> atmConfig, Map<BillValue, Integer> startBills) {
+//        ATM atm = new ATMImpl(atmConfig, atmList.size() + 1);
+//        atm.addCash(startBills);
+//        mementoList.put(atm, atm.saveState());
+//        atmList.add(atm);
+//        return atm;
+//    }
+
+    public DepartmentATM addATM(ATM atm) {
         mementoList.put(atm, atm.saveState());
         atmList.add(atm);
-        return atm;
+
+        return this;
     }
 
     public static int getSumInPackBills(Map<BillValue, Integer> bills) {
