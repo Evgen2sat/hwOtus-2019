@@ -1,8 +1,11 @@
-package ru.otus.hw6;
+package ru.otus.hw6.atm;
+
+import ru.otus.hw6.memento.Memento;
+import ru.otus.hw6.visitor.Visitor;
 
 import java.util.*;
 
-import static ru.otus.hw6.DepartmentATM.getSumInPackBills;
+import static ru.otus.hw6.atm.DepartmentATM.getSumInPackBills;
 
 public class ATMImpl implements ATM {
 

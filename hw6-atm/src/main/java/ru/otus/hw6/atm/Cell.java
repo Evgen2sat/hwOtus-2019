@@ -1,4 +1,4 @@
-package ru.otus.hw6;
+package ru.otus.hw6.atm;
 
 public class Cell implements Comparable<Cell> {
     /**

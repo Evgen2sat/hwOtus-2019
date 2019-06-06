@@ -1,4 +1,6 @@
-package ru.otus.hw6;
+package ru.otus.hw6.visitor;
+
+import ru.otus.hw6.atm.ATM;
 
 public class GrabberATMBalanceVisitor implements Visitor {
     @Override

@@ -1,4 +1,8 @@
-package ru.otus.hw6;
+package ru.otus.hw6.atm;
+
+import ru.otus.hw6.memento.Memento;
+import ru.otus.hw6.visitor.GrabberATMBalanceVisitor;
+import ru.otus.hw6.visitor.Visitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

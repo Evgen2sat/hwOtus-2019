@@ -1,8 +1,7 @@
-package ru.otus.hw6;
+package ru.otus.hw6.memento;
 
-import ru.otus.hw6.ATM;
-import ru.otus.hw6.ATMImpl;
-import ru.otus.hw6.Cell;
+import ru.otus.hw6.atm.ATM;
+import ru.otus.hw6.atm.Cell;
 
 import java.util.*;
 

@@ -1,13 +1,15 @@
 package ru.otus.hw6;
 
+import ru.otus.hw6.atm.ATM;
+import ru.otus.hw6.atm.BillValue;
+import ru.otus.hw6.atm.DepartmentATM;
+import ru.otus.hw6.command.GetCashCommand;
 import ru.otus.hw6.factory.CreationATMFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static ru.otus.hw6.DepartmentATM.getSumInPackBills;
 
 public class Main {
     public static void main(String[] args) {
@@ -68,33 +70,8 @@ public class Main {
                 .addATM(atm3)
                 .addATM(atm4);
 
-//        ATM atm1 = departmentATM.createAtm(atmConfig1, insertedCash1);
-//        ATM atm2 = departmentATM.createAtm(atmConfig2, insertedCash2);
-//        ATM atm3 = departmentATM.createAtm(atmConfig3, insertedCash3);
-//        ATM atm4 = departmentATM.createAtm(atmConfig4, insertedCash4);
-
         System.out.println("Начальное состояние");
         departmentATM.getBalanceFromAllATM();
-
-//        AddCashCommand addCashCommand1 = new AddCashCommand(atm1, insertedCash1);
-//        addCashCommand1.execute();
-//
-//        AddCashCommand addCashCommand2 = new AddCashCommand(atm2, insertedCash2);
-//        addCashCommand2.execute();
-//
-//        System.out.println("\nПосле внесения наличных");
-//        departmentATM.getBalanceFromAllATM();
-//
-//        GetCashCommand getCashCommand3 = new GetCashCommand(atm3, 15000);
-//        getCashCommand3.execute();
-//
-//        System.out.println("\nПосле получения наличных");
-//        departmentATM.getBalanceFromAllATM();
-//
-//        departmentATM.restoreState();
-//
-//        System.out.println("\nПосле восстановления состояния");
-//        departmentATM.getBalanceFromAllATM();
 
         GetCashCommand getCashCommand1 = new GetCashCommand(atm1, 500);
         getCashCommand1.execute();

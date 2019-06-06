@@ -1,4 +1,7 @@
-package ru.otus.hw6;
+package ru.otus.hw6.command;
+
+import ru.otus.hw6.ATM;
+import ru.otus.hw6.BillValue;
 
 import java.util.Map;
 
