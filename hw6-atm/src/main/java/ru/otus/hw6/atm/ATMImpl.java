@@ -12,7 +12,7 @@ public class ATMImpl implements ATM {
     /**
      * Ячейки под купюры
      */
-    private final Set<Cell> cells;
+    private Set<Cell> cells;
 
     /**
      * Номинал купюры-ячейка
@@ -111,7 +111,7 @@ public class ATMImpl implements ATM {
 
     @Override
     public void setCells(Set<Cell> cells) {
-        this.cells.clear();
+        this.cells = new TreeSet<>(Collections.reverseOrder());
         this.cellsMap.clear();
 
         cells.forEach(cell -> {

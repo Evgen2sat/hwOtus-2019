@@ -1,6 +1,6 @@
 package ru.otus.hw6.atm;
 
-public class Cell implements Comparable<Cell> {
+public class Cell implements Comparable<Cell>, Cloneable {
     /**
      * Количество купюр
      */
@@ -58,5 +58,12 @@ public class Cell implements Comparable<Cell> {
                 "count=" + count +
                 ", value=" + value +
                 '}';
+    }
+
+    @Override
+    public Cell clone() {
+        Cell cell = new Cell(value);
+        cell.addBill(count);
+        return cell;
     }
 }

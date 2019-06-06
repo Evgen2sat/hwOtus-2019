@@ -71,7 +71,7 @@ public class Main {
                 .addATM(atm4);
 
         System.out.println("Начальное состояние");
-        departmentATM.getBalanceFromAllATM();
+        System.out.println(atm1.getCells());
 
         GetCashCommand getCashCommand1 = new GetCashCommand(atm1, 500);
         getCashCommand1.execute();
