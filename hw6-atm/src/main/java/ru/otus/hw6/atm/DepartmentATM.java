@@ -14,18 +14,10 @@ public class DepartmentATM {
     private List<ATM> atmList;
     private final Map<ATM, Memento> mementoList;
 
-    DepartmentATM() {
+    public DepartmentATM() {
         atmList = new ArrayList<>();
         mementoList = new HashMap<>();
     }
-
-//    public ATM createAtm(List<BillValue> atmConfig, Map<BillValue, Integer> startBills) {
-//        ATM atm = new ATMImpl(atmConfig, atmList.size() + 1);
-//        atm.addCash(startBills);
-//        mementoList.put(atm, atm.saveState());
-//        atmList.add(atm);
-//        return atm;
-//    }
 
     public DepartmentATM addATM(ATM atm) {
         mementoList.put(atm, atm.saveState());
@@ -44,8 +36,6 @@ public class DepartmentATM {
     }
 
     public void restoreState() {
-        this.atmList.clear();
-
-        mementoList.forEach((key, value) -> this.atmList.add(key.restoreState(value)));
+        mementoList.forEach(ATM::restoreState);
     }
 }

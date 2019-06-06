@@ -15,8 +15,7 @@ public class Memento {
         atm.getCells().forEach(cell -> cells.add(new Cell(cell.getValue()) { {addBill(cell.getCount());} }));
     }
 
-    public ATM getState() {
+    public void restoreState() {
         atm.setCells(cells);
-        return atm;
     }
 }

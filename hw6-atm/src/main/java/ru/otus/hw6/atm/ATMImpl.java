@@ -105,8 +105,8 @@ public class ATMImpl implements ATM {
     }
 
     @Override
-    public ATM restoreState(Memento memento) {
-        return memento.getState();
+    public void restoreState(Memento memento) {
+        memento.restoreState();
     }
 
     @Override

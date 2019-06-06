@@ -21,7 +21,7 @@ public interface ATM {
 
     Memento saveState();
 
-    ATM restoreState(Memento memento);
+    void restoreState(Memento memento);
 
     void setCells(Set<Cell> cells);
 }
