@@ -61,21 +61,22 @@ public abstract class JSONObject {
 
     private static void fillJsonBuilder(Field field, Object object) throws IllegalAccessException {
 
-        if(field.get(object) == null) {
+        Object value = field.get(object);
+
+        if(value == null) {
             jsonBuilder
                     .append((String)null)
                     .append(",");
             return;
         }
 
-        if(field.get(object).getClass().isArray()) {
-            Object oArray = field.get(object);
+        if(value.getClass().isArray()) {
             jsonBuilder
                     .append("[");
 
-            for(int i = 0; i < Array.getLength(oArray); i++) {
+            for(int i = 0; i < Array.getLength(value); i++) {
 
-                Object item = Array.get(oArray, i);
+                Object item = Array.get(value, i);
 
                 fillingItem(item);
 
@@ -88,7 +89,7 @@ public abstract class JSONObject {
             jsonBuilder
                     .append("],");
         } else if(field.getGenericType() instanceof ParameterizedType) {
-            Collection collection = (Collection)field.get(object);
+            Collection collection = (Collection)value;
             jsonBuilder
                     .append("[");
             for(var item : collection) {
@@ -104,7 +105,7 @@ public abstract class JSONObject {
             jsonBuilder.append("],");
         } else {
 
-            fillingItem(field.get(object));
+            fillingItem(value);
 
             jsonBuilder
                     .append(",");
