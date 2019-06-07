@@ -7,6 +7,8 @@ public class Person {
     private int[] param2;
     private static char param3;
     private List<Person> param4;
+    private String[] param5;
+    private Integer[] param6;
 
     public int getParam1() {
         return param1;
@@ -38,5 +40,21 @@ public class Person {
 
     public void setParam4(List<Person> param4) {
         this.param4 = param4;
+    }
+
+    public String[] getParam5() {
+        return param5;
+    }
+
+    public void setParam5(String[] param5) {
+        this.param5 = param5;
+    }
+
+    public Integer[] getParam6() {
+        return param6;
+    }
+
+    public void setParam6(Integer[] param6) {
+        this.param6 = param6;
     }
 }

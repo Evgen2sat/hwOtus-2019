@@ -74,8 +74,12 @@ public abstract class JSONObject {
                     .append("[");
 
             for(int i = 0; i < Array.getLength(oArray); i++) {
+
+                Object item = Array.get(oArray, i);
+
+                fillingItem(item);
+
                 jsonBuilder
-                        .append(Array.get(oArray, i))
                         .append(",");
             }
 
@@ -99,9 +103,26 @@ public abstract class JSONObject {
 
             jsonBuilder.append("],");
         } else {
+
+            fillingItem(field.get(object));
+
             jsonBuilder
-                    .append(field.get(object))
                     .append(",");
+        }
+    }
+
+    private static void fillingItem(Object item) {
+        if(item != null && !(item instanceof Number)) {
+            jsonBuilder
+                    .append("\"")
+                    .append(item)
+                    .append("\"");
+        } else if(item == null) {
+            jsonBuilder
+                    .append((String)null);
+        } else {
+            jsonBuilder
+                    .append(item);
         }
     }
 }

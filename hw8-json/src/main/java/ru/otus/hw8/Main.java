@@ -9,6 +9,8 @@ public class Main {
         person.setParam1(10);
         person.setParam2(new int[] {1,2,3,4,5,6});
         Person.setParam3('d');
+        person.setParam5(new String[] {"11","22","33"});
+        person.setParam6(new Integer[]{1,null,3});
 
         Person people = new Person();
         people.setParam1(10);
