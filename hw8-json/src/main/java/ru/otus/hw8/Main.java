@@ -1,5 +1,7 @@
 package ru.otus.hw8;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,12 @@ public class Main {
 
         person.setParam4(new ArrayList<>() { {add(people); add(people);} });
 
-        System.out.println(JSONObject.toJson(person));
+        String json = JSONObject.toJson(person);
+
+        Gson gson = new Gson();
+        Person person1 = gson.fromJson(json, Person.class);
+
+        System.out.println(person);
+        System.out.println(person1);
     }
 }

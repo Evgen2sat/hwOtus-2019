@@ -1,6 +1,8 @@
 package ru.otus.hw8;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Person {
     private int param1;
@@ -56,5 +58,37 @@ public class Person {
 
     public void setParam6(Integer[] param6) {
         this.param6 = param6;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return param1 == person.param1 &&
+                Arrays.equals(param2, person.param2) &&
+                Objects.equals(param4, person.param4) &&
+                Arrays.equals(param5, person.param5) &&
+                Arrays.equals(param6, person.param6);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(param1, param4);
+        result = 31 * result + Arrays.hashCode(param2);
+        result = 31 * result + Arrays.hashCode(param5);
+        result = 31 * result + Arrays.hashCode(param6);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "param1=" + param1 +
+                ", param2=" + Arrays.toString(param2) +
+                ", param4=" + param4 +
+                ", param5=" + Arrays.toString(param5) +
+                ", param6=" + Arrays.toString(param6) +
+                '}';
     }
 }
