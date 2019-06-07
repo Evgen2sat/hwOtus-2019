@@ -5,7 +5,7 @@ import java.util.List;
 public class Person {
     private int param1;
     private int[] param2;
-    //private static char param3;
+    private static char param3;
     private List<Person> param4;
 
     public int getParam1() {
@@ -24,13 +24,13 @@ public class Person {
         this.param2 = param2;
     }
 
-//    public static char getParam3() {
-//        return param3;
-//    }
-//
-//    public static void setParam3(char param3) {
-//        Person.param3 = param3;
-//    }
+    public static char getParam3() {
+        return param3;
+    }
+
+    public static void setParam3(char param3) {
+        Person.param3 = param3;
+    }
 
     public List<Person> getParam4() {
         return param4;
