@@ -1,6 +1,6 @@
-package ru.otus.hw6;
+package ru.otus.hw6.atm;
 
-public class Cell implements Comparable<Cell> {
+public class Cell implements Comparable<Cell>, Cloneable {
     /**
      * Количество купюр
      */
@@ -9,9 +9,9 @@ public class Cell implements Comparable<Cell> {
     /**
      * Номинал
      */
-    private int value;
+    private final BillValue value;
 
-    public Cell(int value) {
+    public Cell(BillValue value) {
         this.value = value;
     }
 
@@ -43,18 +43,27 @@ public class Cell implements Comparable<Cell> {
      * Получить номинал
      * @return
      */
-    public int getValue() {
+    public BillValue getValue() {
         return value;
     }
 
     @Override
     public int compareTo(Cell item) {
-        if(value == item.getValue()) {
-            return 0;
-        } else if(value < item.getValue()) {
-            return -1;
-        } else {
-            return 1;
-        }
+        return Integer.compare(value.getValue(), item.getValue().getValue());
+    }
+
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "count=" + count +
+                ", value=" + value +
+                '}';
+    }
+
+    @Override
+    public Cell clone() {
+        Cell cell = new Cell(value);
+        cell.addBill(count);
+        return cell;
     }
 }
