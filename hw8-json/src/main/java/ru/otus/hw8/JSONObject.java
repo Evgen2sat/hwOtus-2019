@@ -3,16 +3,18 @@ package ru.otus.hw8;
 import java.lang.reflect.*;
 import java.util.Collection;
 
-public abstract class JSONObject {
+public class JSONObject {
 
-    private static StringBuilder jsonBuilder = new StringBuilder();
+    private StringBuilder jsonBuilder = new StringBuilder();
 
-    public static String toJson(Object object) throws IllegalAccessException {
-        createJsonText(object);
+    public String toJson(Object object) throws IllegalAccessException {
+        jsonBuilder.setLength(0);
+        //createJsonText(object);
+        fillingItem(object);
         return jsonBuilder.toString();
     }
 
-    private static void setAccesiblePrivateField(Field field, boolean staticField, Object object) {
+    private void setAccesiblePrivateField(Field field, boolean staticField, Object object) {
         if(!staticField) {
             if(!field.canAccess(object)) {
                 field.setAccessible(true);
@@ -24,11 +26,22 @@ public abstract class JSONObject {
         }
     }
 
-    private static void removeEndChar(StringBuilder jsonBuilder) {
+    private void removeEndChar(StringBuilder jsonBuilder) {
         jsonBuilder.replace(jsonBuilder.length()-1, jsonBuilder.length(), "");
     }
 
-    private static void createJsonText(Object object) throws IllegalAccessException {
+    private void createJsonText(Object object) throws IllegalAccessException {
+
+//        if(object == null) {
+//            jsonBuilder
+//                    .append((String)null);
+//            return;
+//        } else if(object.getClass().getDeclaredClasses().length > 0) {
+//            fillingItem(object);
+//            return;
+//        }
+
+
         jsonBuilder
                 .append("{");
 
@@ -59,7 +72,7 @@ public abstract class JSONObject {
                 .append("}");
     }
 
-    private static void fillJsonBuilder(Field field, Object object) throws IllegalAccessException {
+    private void fillJsonBuilder(Field field, Object object) throws IllegalAccessException {
 
         Object value = field.get(object);
 
@@ -112,18 +125,47 @@ public abstract class JSONObject {
         }
     }
 
-    private static void fillingItem(Object item) {
-        if(item != null && !(item instanceof Number)) {
+    private void fillingItem(Object item) throws IllegalAccessException {
+        if(item == null) {
+            jsonBuilder
+                    .append((String)null);
+        } else if(item.getClass().isArray()) {
+            jsonBuilder
+                    .append("[");
+            for(int i = 0; i < Array.getLength(item); i++) {
+                jsonBuilder
+                        .append(Array.get(item, i))
+                        .append(",");
+            }
+            removeEndChar(jsonBuilder);
+
+            jsonBuilder
+                    .append("]");
+        } else if(item instanceof Collection) {
+            Collection collection = (Collection)item;
+            jsonBuilder
+                    .append("[");
+            for(var it : collection) {
+                if(it != null) {
+                    fillingItem(it);
+
+                    jsonBuilder
+                            .append(",");
+                }
+            }
+            removeEndChar(jsonBuilder);
+
+            jsonBuilder.append("]");
+        } else if(item instanceof String || item instanceof Character) {
             jsonBuilder
                     .append("\"")
                     .append(item)
                     .append("\"");
-        } else if(item == null) {
-            jsonBuilder
-                    .append((String)null);
-        } else {
+        } else if (item instanceof Number) {
             jsonBuilder
                     .append(item);
+        } else {
+            createJsonText(item);
         }
     }
 }
