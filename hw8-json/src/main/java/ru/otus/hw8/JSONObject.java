@@ -9,21 +9,8 @@ public class JSONObject {
 
     public String toJson(Object object) throws IllegalAccessException {
         jsonBuilder.setLength(0);
-        //createJsonText(object);
         fillingItem(object);
         return jsonBuilder.toString();
-    }
-
-    private void setAccesiblePrivateField(Field field, boolean staticField, Object object) {
-        if(!staticField) {
-            if(!field.canAccess(object)) {
-                field.setAccessible(true);
-            }
-        } else {
-            if(!field.canAccess(null)) {
-                field.setAccessible(true);
-            }
-        }
     }
 
     private void removeEndChar(StringBuilder jsonBuilder) {
@@ -31,16 +18,6 @@ public class JSONObject {
     }
 
     private void createJsonText(Object object) throws IllegalAccessException {
-
-//        if(object == null) {
-//            jsonBuilder
-//                    .append((String)null);
-//            return;
-//        } else if(object.getClass().getDeclaredClasses().length > 0) {
-//            fillingItem(object);
-//            return;
-//        }
-
 
         jsonBuilder
                 .append("{");
@@ -51,7 +28,7 @@ public class JSONObject {
 
             boolean staticField = Modifier.isStatic(field.getModifiers());
 
-            setAccesiblePrivateField(field, staticField, object);
+            ReflectionHelper.setAccesiblePrivateField(field, staticField, object);
 
             jsonBuilder
                     .append("\"")
