@@ -15,6 +15,7 @@
         <module>hw4-aop</module>
         <module>hw5-gc</module>
         <module>hw6-atm</module>
+        <module>hw8-json</module>
     </modules>
 
     <properties>
