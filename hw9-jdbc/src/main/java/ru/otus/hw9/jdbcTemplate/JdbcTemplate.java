@@ -1,4 +1,4 @@
-package ru.otus.hw9;
+package ru.otus.hw9.jdbcTemplate;
 
 import java.lang.annotation.Annotation;
 

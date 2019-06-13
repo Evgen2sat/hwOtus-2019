@@ -1,4 +1,6 @@
-package ru.otus.hw9;
+package ru.otus.hw9.tools;
+
+import ru.otus.hw9.Id;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -48,5 +50,20 @@ public final class ReflectionHelper {
         }
 
         return false;
+    }
+
+    public static boolean checkNullIdField(Object object, Class<? extends Annotation> clazz) throws IllegalAccessException {
+        if(object == null) {
+            return true;
+        }
+
+        Field[] declaredFields = object.getClass().getDeclaredFields();
+        for(Field field : declaredFields) {
+            if(field.isAnnotationPresent(clazz)) {
+                return field.get(object) == null;
+            }
+        }
+
+        return true;
     }
 }

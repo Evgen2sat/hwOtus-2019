@@ -1,7 +1,8 @@
-package ru.otus.hw9;
+package ru.otus.hw9.executor;
+
+import ru.otus.hw9.QueryParam;
 
 import java.sql.*;
-import java.util.Optional;
 import java.util.function.Function;
 
 public class DBExecutorImpl implements DBExecutor {

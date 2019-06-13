@@ -1,4 +1,6 @@
-package ru.otus.hw9;
+package ru.otus.hw9.executor;
+
+import ru.otus.hw9.QueryParam;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

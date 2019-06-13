@@ -1,6 +1,8 @@
-package ru.otus.hw9;
+package ru.otus.hw9.dto;
 
-public class User {
+import ru.otus.hw9.Id;
+
+public class UserDto {
     @Id
     private Long id;
     private String name;
@@ -32,7 +34,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserDto{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +

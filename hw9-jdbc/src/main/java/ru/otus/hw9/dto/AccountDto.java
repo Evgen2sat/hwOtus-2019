@@ -1,6 +1,8 @@
-package ru.otus.hw9;
+package ru.otus.hw9.dto;
 
-public class Account {
+import ru.otus.hw9.Id;
+
+public class AccountDto {
     @Id
     private long no;
     private String type;
@@ -28,5 +30,14 @@ public class Account {
 
     public void setRest(int rest) {
         this.rest = rest;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountDto{" +
+                "no=" + no +
+                ", type='" + type + '\'' +
+                ", rest=" + rest +
+                '}';
     }
 }
