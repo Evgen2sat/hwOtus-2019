@@ -1,8 +1,8 @@
-package ru.otus.hw9.dto;
+package ru.otus.hw9.v2.dto;
 
 import ru.otus.hw9.Id;
 
-public class UserDto {
+public class User {
     @Id
     private Long id;
     private String name;

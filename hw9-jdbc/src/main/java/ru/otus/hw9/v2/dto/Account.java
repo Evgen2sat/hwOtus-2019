@@ -1,18 +1,20 @@
-package ru.otus.hw9.dto;
+package ru.otus.hw9.v2.dto;
 
 import ru.otus.hw9.Id;
 
-public class AccountDto {
-    @Id
-    private long no;
-    private String type;
-    private int rest;
+import java.math.BigDecimal;
 
-    public long getNo() {
+public class Account {
+    @Id
+    private Long no;
+    private String type;
+    private BigDecimal rest;
+
+    public Long getNo() {
         return no;
     }
 
-    public void setNo(long no) {
+    public void setNo(Long no) {
         this.no = no;
     }
 
@@ -24,11 +26,11 @@ public class AccountDto {
         this.type = type;
     }
 
-    public int getRest() {
+    public BigDecimal getRest() {
         return rest;
     }
 
-    public void setRest(int rest) {
+    public void setRest(BigDecimal rest) {
         this.rest = rest;
     }
 

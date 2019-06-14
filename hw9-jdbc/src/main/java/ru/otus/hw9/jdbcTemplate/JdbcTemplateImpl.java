@@ -37,12 +37,12 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
 
     @Override
     public void createOrUpdate(T data) {
-        if(!checkAnnotation(data, Id.class)) {
+        if(!checkAnnotation(data)) {
             throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
         }
 
         try {
-            if(ReflectionHelper.checkNullIdField(data, Id.class)) {
+            if(ReflectionHelper.checkNullIdField(data)) {
                 create(data);
             } else {
                 update(data);
@@ -69,7 +69,7 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
     }
 
     @Override
-    public boolean checkAnnotation(Object object, Class<? extends Annotation> clazz) {
-        return ReflectionHelper.checkAnnotation(object, clazz);
+    public boolean checkAnnotation(Object object) {
+        return ReflectionHelper.checkAnnotation(object);
     }
 }

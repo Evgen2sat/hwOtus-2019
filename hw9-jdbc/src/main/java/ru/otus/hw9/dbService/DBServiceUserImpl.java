@@ -28,7 +28,7 @@ public class DBServiceUserImpl implements DBService<UserDto> {
 
     @Override
     public void create(UserDto data) {
-        if(!ReflectionHelper.checkAnnotation(data, Id.class)) {
+        if(!ReflectionHelper.checkAnnotation(data)) {
             throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
         }
 
@@ -47,7 +47,7 @@ public class DBServiceUserImpl implements DBService<UserDto> {
 
     @Override
     public void update(UserDto data) {
-        if(!ReflectionHelper.checkAnnotation(data, Id.class)) {
+        if(!ReflectionHelper.checkAnnotation(data)) {
             throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
         }
 
