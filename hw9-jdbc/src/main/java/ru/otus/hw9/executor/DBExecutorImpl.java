@@ -21,14 +21,17 @@ public class DBExecutorImpl implements DBExecutor {
 
             preparedStatement.executeUpdate();
 
+            long id = -1L;
+
             try(ResultSet rs = preparedStatement.getGeneratedKeys()) {
                 if(rs.next()) {
-                    return rs.getLong(1);
-                } else {
-                    return -1L;
+                    id = rs.getLong(1);
                 }
             }
 
+            this.connection.commit();
+
+            return id;
         } catch (Exception e) {
             this.connection.rollback(savepoint);
             System.out.println(e.getMessage());
