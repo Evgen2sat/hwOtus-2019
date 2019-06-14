@@ -1,45 +1,41 @@
 package ru.otus.hw9;
 
+import ru.otus.hw9.dto.Account;
+import ru.otus.hw9.dto.User;
 import ru.otus.hw9.dbService.DBService;
 import ru.otus.hw9.dbService.DBServiceAccountImpl;
 import ru.otus.hw9.dbService.DBServiceUserImpl;
-import ru.otus.hw9.dto.AccountDto;
-import ru.otus.hw9.dto.UserDto;
-import ru.otus.hw9.jdbcTemplate.JdbcTemplate;
 import ru.otus.hw9.jdbcTemplate.JdbcTemplateImpl;
 
-import java.sql.SQLException;
+import java.math.BigDecimal;
 
 public class Main {
-    public static void main(String[] args) {
-        try {
-            DBService<UserDto> userDtoDBService = new DBServiceUserImpl();
-            JdbcTemplate<UserDto> userJdbcTemplate = new JdbcTemplateImpl<>(userDtoDBService);
-            userJdbcTemplate.createTable();
-            UserDto user = new UserDto();
-            user.setName("User1");
-            user.setAge(3);
-            userJdbcTemplate.create(user);
-            UserDto loadedUser = userJdbcTemplate.load(1);
-            System.out.println(loadedUser);
-            loadedUser.setName("ChangedUser1");
-            userJdbcTemplate.update(loadedUser);
-            System.out.println(userJdbcTemplate.load(1));
+    public static void main(String[] args) throws Exception {
+        DBService<User> userDBService = new DBServiceUserImpl(new JdbcTemplateImpl<>());
+        userDBService.createTable();
+        User user = new User();
+        user.setName("User1");
+        user.setAge(3);
+        System.out.println("Оригинал " + user);
+        userDBService.create(user);
+        System.out.println("После создания в БД " + user);
+        user.setName("ChangedUser1");
+        userDBService.update(user);
+        System.out.println("После изменения в БД " + user);
+        System.out.println(userDBService.getItem(user.getId(), User.class));
 
-            DBService<AccountDto> accountDtoDBService = new DBServiceAccountImpl();
-            JdbcTemplate<AccountDto> accountJdbcTemplate = new JdbcTemplateImpl<>(accountDtoDBService);
-            accountJdbcTemplate.createTable();
-            AccountDto accountDto = new AccountDto();
-            accountDto.setType("Type1");
-            accountDto.setRest(10);
-            accountJdbcTemplate.create(accountDto);
-            AccountDto loadedAccount = accountJdbcTemplate.load(1);
-            System.out.println(loadedAccount);
-            loadedAccount.setType("ChangedType1");
-            accountJdbcTemplate.update(loadedAccount);
-            System.out.println(accountJdbcTemplate.load(1));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        DBService<Account> accountDBService = new DBServiceAccountImpl(new JdbcTemplateImpl<>());
+        accountDBService.createTable();
+        Account account = new Account();
+        account.setType("Type1");
+        account.setRest(BigDecimal.valueOf(10));
+        System.out.println("Оригинал " + account);
+        accountDBService.create(account);
+        System.out.println("После создания в БД " + account);
+        account.setType("ChangedType1");
+        accountDBService.update(account);
+        System.out.println("После изменения в БД " + account);
+        System.out.println(accountDBService.getItem(2, Account.class));
     }
 }

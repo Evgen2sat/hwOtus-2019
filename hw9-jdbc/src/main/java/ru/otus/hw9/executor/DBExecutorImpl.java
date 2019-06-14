@@ -1,7 +1,5 @@
 package ru.otus.hw9.executor;
 
-import ru.otus.hw9.QueryParam;
-
 import java.sql.*;
 import java.util.function.Function;
 
@@ -14,14 +12,22 @@ public class DBExecutorImpl implements DBExecutor {
     }
 
     @Override
-    public int insert(String sql, QueryParam... params) throws SQLException {
+    public long insert(String sql, Object... params) throws SQLException {
         Savepoint savepoint = connection.setSavepoint("savePoint");
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             setParams(preparedStatement, params);
 
-            return preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
+
+            try(ResultSet rs = preparedStatement.getGeneratedKeys()) {
+                if(rs.next()) {
+                    return rs.getLong(1);
+                } else {
+                    return -1L;
+                }
+            }
 
         } catch (Exception e) {
             this.connection.rollback(savepoint);
@@ -31,7 +37,7 @@ public class DBExecutorImpl implements DBExecutor {
     }
 
     @Override
-    public <T> T select(String sql, Function<ResultSet, T> mapper, QueryParam... params) throws SQLException {
+    public <T> T select(String sql, Function<ResultSet, T> mapper, Object... params) throws SQLException {
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             setParams(preparedStatement, params);
 
@@ -41,12 +47,12 @@ public class DBExecutorImpl implements DBExecutor {
         }
     }
 
-    private void setParams(PreparedStatement preparedStatement, QueryParam...params) throws SQLException {
+    private void setParams(PreparedStatement preparedStatement, Object...params) throws SQLException {
         for(int i = 0; i < params.length; i++) {
-            if(params[i].getValue() == null) {
-                preparedStatement.setNull(i+1, params[i].getType());
+            if(params[i] == null) {
+                preparedStatement.setNull(i+1, Types.NULL);
             } else {
-                preparedStatement.setObject(i+1, params[i].getValue(), params[i].getType());
+                preparedStatement.setObject(i+1, params[i]);
             }
         }
     }
@@ -56,5 +62,10 @@ public class DBExecutorImpl implements DBExecutor {
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.executeUpdate();
         }
+    }
+
+    @Override
+    public void update(String sql, Object... params) throws SQLException {
+        insert(sql, params);
     }
 }

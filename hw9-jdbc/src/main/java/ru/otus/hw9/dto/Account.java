@@ -1,4 +1,4 @@
-package ru.otus.hw9.v2.dto;
+package ru.otus.hw9.dto;
 
 import ru.otus.hw9.Id;
 

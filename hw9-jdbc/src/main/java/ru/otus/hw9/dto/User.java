@@ -2,7 +2,7 @@ package ru.otus.hw9.dto;
 
 import ru.otus.hw9.Id;
 
-public class UserDto {
+public class User {
     @Id
     private Long id;
     private String name;
