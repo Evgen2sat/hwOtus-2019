@@ -33,14 +33,6 @@ public final class ReflectionHelper {
         return null;
     }
 
-//    public static String getColumnsByFields(Object object) {
-//        if(object == null) {
-//            return null;
-//        }
-//
-//        return Arrays.stream(object.getClass().getFields()).filter(item -> !item.isAnnotationPresent(Id.class)).map(Field::getName).collect(Collectors.joining(","));
-//    }
-
     public static List<String> getColumnsByFields(Object object) {
         if(object == null) {
             return null;
