@@ -8,10 +8,18 @@ import ru.otus.hw9.dbService.DBServiceUserImpl;
 import ru.otus.hw9.jdbcTemplate.JdbcTemplateImpl;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Main {
+
+    private static final String URL = "jdbc:h2:mem:";
+
     public static void main(String[] args) throws Exception {
-        DBService<User> userDBService = new DBServiceUserImpl(new JdbcTemplateImpl<>());
+        Connection connection = getConnection();
+
+        DBService<User> userDBService = new DBServiceUserImpl(new JdbcTemplateImpl<>(connection));
         userDBService.createTable();
         User user = new User();
         user.setName("User1");
@@ -25,7 +33,7 @@ public class Main {
         System.out.println(userDBService.getItem(user.getId(), User.class));
 
 
-        DBService<Account> accountDBService = new DBServiceAccountImpl(new JdbcTemplateImpl<>());
+        DBService<Account> accountDBService = new DBServiceAccountImpl(new JdbcTemplateImpl<>(connection));
         accountDBService.createTable();
         Account account = new Account();
         account.setType("Type1");
@@ -37,5 +45,13 @@ public class Main {
         accountDBService.update(account);
         System.out.println("После изменения в БД " + account);
         System.out.println(accountDBService.getItem(2, Account.class));
+
+        connection.close();
+    }
+
+    public static Connection getConnection() throws SQLException {
+        Connection connection = DriverManager.getConnection(URL);
+        connection.setAutoCommit(false);
+        return connection;
     }
 }

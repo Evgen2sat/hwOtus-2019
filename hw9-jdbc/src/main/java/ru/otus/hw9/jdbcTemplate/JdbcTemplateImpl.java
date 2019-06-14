@@ -13,11 +13,9 @@ import java.util.stream.Collectors;
 
 public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
 
-    private static final String URL = "jdbc:h2:mem:";
     private final DBExecutor dbExecutor;
 
-    public JdbcTemplateImpl() throws SQLException {
-        Connection connection = getConnection();
+    public JdbcTemplateImpl(Connection connection) throws SQLException {
         dbExecutor = new DBExecutorImpl(connection);
     }
 
@@ -122,12 +120,6 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
             e.printStackTrace();
             System.out.println("Создание таблицы " + type + " завершилось ошибкой");
         }
-    }
-
-    public static Connection getConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection(URL);
-        connection.setAutoCommit(false);
-        return connection;
     }
 
     @Override
