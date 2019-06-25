@@ -12,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 import ru.otus.hw10.dbService.hibernate.DBHibernateServiceAccountImpl;
 import ru.otus.hw10.dbService.hibernate.DBHibernateServiceUserImpl;
 import ru.otus.hw10.dto.Account;
+import ru.otus.hw10.dto.Address;
 import ru.otus.hw10.dto.User;
 
 import javax.persistence.metamodel.EntityType;
@@ -23,8 +24,6 @@ public class Main {
 
     private static final StandardServiceRegistry standardServiceRegistry;
 
-//    private static final SessionFactory ourSessionFactory;
-
     static {
         try {
             Configuration configuration = new Configuration();
@@ -33,24 +32,19 @@ public class Main {
             standardServiceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties())
                     .build();
-
-//            Metadata metadata = new MetadataSources(standardServiceRegistry)
-//                    .addAnnotatedClass(User.class)
-//                    .addAnnotatedClass(Account.class)
-//                    .getMetadataBuilder()
-//                    .build();
-//
-//            ourSessionFactory = metadata.getSessionFactoryBuilder().build();
         } catch (Throwable ex) {
             throw new ExceptionInInitializerError(ex);
         }
     }
 
     public static void main(final String[] args) throws Exception {
+        Address address = new Address();
+        address.setStreet("STREET");
 
         User person = new User();
         person.setName("Ivan");
         person.setAge(10);
+        person.setAddress(address);
 
         DBHibernateServiceUserImpl dbHibernateServiceUser = new DBHibernateServiceUserImpl(standardServiceRegistry);
         dbHibernateServiceUser.create(person);
@@ -62,17 +56,17 @@ public class Main {
         System.out.println(dbHibernateServiceUser.getItem(1, User.class));
 
 
-        Account account = new Account();
-        account.setType("Ivan");
-        account.setRest(BigDecimal.valueOf(10));
-
-        DBHibernateServiceAccountImpl dbHibernateServiceAccount = new DBHibernateServiceAccountImpl(standardServiceRegistry);
-        dbHibernateServiceAccount.create(account);
-
-        Account itemAccount = dbHibernateServiceAccount.getItem(1, Account.class);
-        System.out.println(itemAccount);
-        itemAccount.setType("ChangedAccount");
-        dbHibernateServiceAccount.update(itemAccount);
-        System.out.println(dbHibernateServiceAccount.getItem(1, Account.class));
+//        Account account = new Account();
+//        account.setType("Ivan");
+//        account.setRest(BigDecimal.valueOf(10));
+//
+//        DBHibernateServiceAccountImpl dbHibernateServiceAccount = new DBHibernateServiceAccountImpl(standardServiceRegistry);
+//        dbHibernateServiceAccount.create(account);
+//
+//        Account itemAccount = dbHibernateServiceAccount.getItem(1, Account.class);
+//        System.out.println(itemAccount);
+//        itemAccount.setType("ChangedAccount");
+//        dbHibernateServiceAccount.update(itemAccount);
+//        System.out.println(dbHibernateServiceAccount.getItem(1, Account.class));
     }
 }
