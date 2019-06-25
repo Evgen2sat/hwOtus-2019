@@ -16,6 +16,7 @@
         <module>hw5-gc</module>
         <module>hw6-atm</module>
         <module>hw8-json</module>
+        <module>hw9-jdbc</module>
     </modules>
 
     <properties>
