@@ -15,19 +15,11 @@ public class DBServiceUserImpl implements DBService<User> {
 
     @Override
     public void create(User data) {
-        if(!ReflectionHelper.checkAnnotation(data)) {
-            throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
-        }
-
         jdbcTemplate.create(data);
     }
 
     @Override
     public void update(User data) {
-        if(!ReflectionHelper.checkAnnotation(data)) {
-            throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
-        }
-
         jdbcTemplate.update(data);
     }
 

@@ -21,6 +21,10 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
 
     @Override
     public void create(T data) {
+        if(!ReflectionHelper.checkAnnotation(data)) {
+            throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
+        }
+
         try {
             List<String> columnsByFields = ReflectionHelper.getColumnsByFields(data);
 
@@ -46,6 +50,10 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
 
     @Override
     public void update(T data) {
+        if(!ReflectionHelper.checkAnnotation(data)) {
+            throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
+        }
+
         try {
             List<String> columnsByFields = ReflectionHelper.getColumnsByFields(data);
             String idFieldName = ReflectionHelper.getIdFieldName(data);
