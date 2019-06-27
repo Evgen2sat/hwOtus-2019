@@ -2,6 +2,7 @@ package ru.otus.hw10.dto;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,8 +18,8 @@ public class User {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Phone> phones;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Phone> phones = new ArrayList<>();
 
     public Long getId() {
         return id;

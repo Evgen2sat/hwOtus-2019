@@ -48,21 +48,25 @@ public class Main {
         Address address = new Address();
         address.setStreet("STREET");
 
-        List<Phone> phones = new ArrayList<>();
-        Phone phone1 = new Phone();
-        phone1.setNumber("123");
-        Phone phone2 = new Phone();
-        phone2.setNumber("456");
-        Phone phone3 = new Phone();
-        phone3.setNumber("789");
-        phones.add(phone1);
-        phones.add(phone2);
-        phones.add(phone3);
 
         User person = new User();
         person.setName("Ivan");
         person.setAge(10);
         person.setAddress(address);
+
+        List<Phone> phones = new ArrayList<>();
+        Phone phone1 = new Phone();
+        phone1.setNumber("123");
+        phone1.setUser(person);
+        Phone phone2 = new Phone();
+        phone2.setNumber("456");
+        phone2.setUser(person);
+        Phone phone3 = new Phone();
+        phone3.setNumber("789");
+        phone3.setUser(person);
+        phones.add(phone1);
+        phones.add(phone2);
+        phones.add(phone3);
         person.setPhones(phones);
 
         DBHibernateServiceUserImpl dbHibernateServiceUser = new DBHibernateServiceUserImpl(standardServiceRegistry);
@@ -70,11 +74,10 @@ public class Main {
 
         User item = dbHibernateServiceUser.getItem(1, User.class);
         System.out.println(item);
-//        item.setName("ChangedUser");
-//        dbHibernateServiceUser.update(item);
-//        System.out.println(dbHibernateServiceUser.getItem(1, User.class));
-
-
+        item.setName("ChangedUser");
+        item.getPhones().get(0).setNumber("99999999999999");
+        dbHibernateServiceUser.update(item);
+        System.out.println(dbHibernateServiceUser.getItem(1, User.class));
 
 
 //        Account account = new Account();
