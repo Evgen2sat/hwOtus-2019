@@ -6,6 +6,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import ru.otus.hw10.dbService.DBService;
 import ru.otus.hw10.dto.Address;
+import ru.otus.hw10.dto.Phone;
 import ru.otus.hw10.dto.User;
 import ru.otus.hw10.tools.ReflectionHelper;
 
@@ -14,13 +15,17 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
 
 
     public DBHibernateServiceUserImpl(StandardServiceRegistry standardServiceRegistry) {
-        sessionFactory = new MetadataSources(standardServiceRegistry)
-                                            //.addAnnotatedClass(User.class)
-                                            //.addAnnotatedClass(Address.class)
-                                            .getMetadataBuilder()
-                                            .build()
-                                            .getSessionFactoryBuilder()
-                                            .build();
+//        sessionFactory = new MetadataSources(standardServiceRegistry)
+//                                            .addAnnotatedClass(User.class)
+//                                            .addAnnotatedClass(Address.class)
+//                                            .getMetadataBuilder()
+//                                            .build()
+//                                            .getSessionFactoryBuilder()
+//                                            .build();
+
+        this.sessionFactory = new MetadataSources(standardServiceRegistry)
+                                        .buildMetadata()
+                                        .buildSessionFactory();
     }
 
     @Override

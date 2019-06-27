@@ -12,12 +12,16 @@ public class DBHibernateServiceAccountImpl implements DBService<Account> {
 
 
     public DBHibernateServiceAccountImpl(StandardServiceRegistry standardServiceRegistry) {
-        sessionFactory = new MetadataSources(standardServiceRegistry)
-                .addAnnotatedClass(Account.class)
-                .getMetadataBuilder()
-                .build()
-                .getSessionFactoryBuilder()
-                .build();
+//        sessionFactory = new MetadataSources(standardServiceRegistry)
+//                .addAnnotatedClass(Account.class)
+//                .getMetadataBuilder()
+//                .build()
+//                .getSessionFactoryBuilder()
+//                .build();
+
+        this.sessionFactory = new MetadataSources(standardServiceRegistry)
+                .buildMetadata()
+                .buildSessionFactory();
     }
 
     @Override

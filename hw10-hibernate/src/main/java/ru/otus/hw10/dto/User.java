@@ -2,6 +2,7 @@ package ru.otus.hw10.dto;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -15,6 +16,9 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Phone> phones;
 
     public Long getId() {
         return id;
@@ -48,6 +52,14 @@ public class User {
         this.address = address;
     }
 
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -55,6 +67,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", address=" + address +
+                ", phones=" + phones +
                 '}';
     }
 }
