@@ -15,14 +15,6 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
 
 
     public DBHibernateServiceUserImpl(StandardServiceRegistry standardServiceRegistry) {
-//        sessionFactory = new MetadataSources(standardServiceRegistry)
-//                                            .addAnnotatedClass(User.class)
-//                                            .addAnnotatedClass(Address.class)
-//                                            .getMetadataBuilder()
-//                                            .build()
-//                                            .getSessionFactoryBuilder()
-//                                            .build();
-
         this.sessionFactory = new MetadataSources(standardServiceRegistry)
                                         .buildMetadata()
                                         .buildSessionFactory();
