@@ -14,7 +14,7 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     private final long lifeTimeMs;
     private final boolean isEternal;
 
-    private final Map<K, SoftReference<CacheItem<V>>> cacheItems = new LinkedHashMap<>();
+    private final SoftReference<Map<K, CacheItem<V>>> cacheItems = new SoftReference<>(new LinkedHashMap<>());
     private final Timer timer = new Timer();
 
     private int hit = 0;
@@ -28,12 +28,12 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
     @Override
     public void put(K key, V value) {
-        if(cacheItems.size() == maxElements) {
-            K item = cacheItems.keySet().iterator().next();
-            cacheItems.remove(item);
+        if(cacheItems.get().size() == maxElements) {
+            K item = cacheItems.get().keySet().iterator().next();
+            cacheItems.get().remove(item);
         }
 
-        cacheItems.put(key, new SoftReference<>(new CacheItem<>(value)));
+        cacheItems.get().put(key, new CacheItem<>(value));
 
         if (!isEternal) {
             if (lifeTimeMs != 0) {
@@ -45,20 +45,20 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
     @Override
     public V get(K key, Function<K, V> getFunction) {
-        SoftReference<CacheItem<V>> cacheItem = cacheItems.get(key);
+        CacheItem<V> cacheItem = cacheItems.get().get(key);
 
         if(cacheItem == null) {
             miss++;
             V dbItem = getFunction.apply(key);
             if(dbItem != null) {
                 put(key, dbItem);
-                cacheItem = cacheItems.get(key);
+                cacheItem = cacheItems.get().get(key);
             }
         } else {
             hit++;
         }
 
-        return cacheItem != null ? cacheItem.get().getValue() : null;
+        return cacheItem != null ? cacheItem.getValue() : null;
     }
 
     @Override
@@ -80,9 +80,9 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
         return new TimerTask() {
             @Override
             public void run() {
-                SoftReference<CacheItem<V>> item = cacheItems.get(key);
-                if (item == null || isT1BeforeT2(timeFunction.apply(item.get()), System.currentTimeMillis())) {
-                    cacheItems.remove(key);
+                CacheItem<V> item = cacheItems.get().get(key);
+                if (item == null || isT1BeforeT2(timeFunction.apply(item), System.currentTimeMillis())) {
+                    cacheItems.get().remove(key);
                     this.cancel();
                 }
             }

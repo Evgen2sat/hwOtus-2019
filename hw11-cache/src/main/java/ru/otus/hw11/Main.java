@@ -49,17 +49,19 @@ public class Main {
         phones.add(phone3);
         person.setPhones(phones);
 
-        DBHibernateServiceUserImpl dbHibernateServiceUser = new DBHibernateServiceUserImpl(standardServiceRegistry);
-        dbHibernateServiceUser.create(person);
+        try(DBHibernateServiceUserImpl dbHibernateServiceUser = new DBHibernateServiceUserImpl(standardServiceRegistry)) {
+            dbHibernateServiceUser.create(person);
 
-        User item = dbHibernateServiceUser.getItem(1, User.class);
-        System.out.println(item);
-        item.setName("ChangedUser");
-        item.getPhones().get(0).setNumber("99999999999999");
-        dbHibernateServiceUser.update(item);
-        System.out.println(dbHibernateServiceUser.getItem(1, User.class));
+            User item = dbHibernateServiceUser.getItem(1, User.class);
+            System.out.println(item);
+            item.setName("ChangedUser");
+            item.getPhones().get(0).setNumber("99999999999999");
+            dbHibernateServiceUser.update(item);
+            System.out.println(dbHibernateServiceUser.getItem(1, User.class));
 
-        Thread.sleep(20000);
-        System.out.println(dbHibernateServiceUser.getItem(1, User.class));
+            Thread.sleep(20000);
+            System.out.println(dbHibernateServiceUser.getItem(1, User.class));
+        }
+
     }
 }
