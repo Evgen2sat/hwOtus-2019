@@ -1,9 +1,10 @@
-package ru.otus.hw9.dbService;
+package ru.otus.hw10.dbService.jdbcTemplate;
 
-import ru.otus.hw9.SQLForCreateTableEnum;
-import ru.otus.hw9.tools.ReflectionHelper;
-import ru.otus.hw9.dto.Account;
-import ru.otus.hw9.jdbcTemplate.JdbcTemplate;
+import ru.otus.hw10.SQLForCreateTableEnum;
+import ru.otus.hw10.dbService.DBService;
+import ru.otus.hw10.dto.Account;
+import ru.otus.hw10.jdbcTemplate.JdbcTemplate;
+import ru.otus.hw10.tools.ReflectionHelper;
 
 public class DBServiceAccountImpl implements DBService<Account> {
 
@@ -15,11 +16,19 @@ public class DBServiceAccountImpl implements DBService<Account> {
 
     @Override
     public void create(Account data) {
+        if(!ReflectionHelper.checkAnnotation(data)) {
+            throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
+        }
+
         jdbcTemplate.create(data);
     }
 
     @Override
     public void update(Account data) {
+        if(!ReflectionHelper.checkAnnotation(data)) {
+            throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
+        }
+
         jdbcTemplate.update(data);
     }
 

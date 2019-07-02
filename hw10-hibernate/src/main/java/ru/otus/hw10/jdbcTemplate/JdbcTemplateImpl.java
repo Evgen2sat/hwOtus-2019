@@ -1,12 +1,11 @@
-package ru.otus.hw9.jdbcTemplate;
+package ru.otus.hw10.jdbcTemplate;
 
-import ru.otus.hw9.SQLForCreateTableEnum;
-import ru.otus.hw9.tools.ReflectionHelper;
-import ru.otus.hw9.executor.DBExecutor;
-import ru.otus.hw9.executor.DBExecutorImpl;
+import ru.otus.hw10.SQLForCreateTableEnum;
+import ru.otus.hw10.executor.DBExecutor;
+import ru.otus.hw10.executor.DBExecutorImpl;
+import ru.otus.hw10.tools.ReflectionHelper;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,10 +20,6 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
 
     @Override
     public void create(T data) {
-        if(!ReflectionHelper.checkAnnotation(data)) {
-            throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
-        }
-
         try {
             List<String> columnsByFields = ReflectionHelper.getColumnsByFields(data);
 
@@ -50,10 +45,6 @@ public class JdbcTemplateImpl<T> implements JdbcTemplate<T> {
 
     @Override
     public void update(T data) {
-        if(!ReflectionHelper.checkAnnotation(data)) {
-            throw new IllegalArgumentException("Отсутствует поле с аннотацией @Id");
-        }
-
         try {
             List<String> columnsByFields = ReflectionHelper.getColumnsByFields(data);
             String idFieldName = ReflectionHelper.getIdFieldName(data);
