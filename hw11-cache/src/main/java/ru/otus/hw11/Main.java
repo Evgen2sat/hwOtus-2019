@@ -16,13 +16,6 @@ public class Main {
 
     static {
         try {
-//            Configuration configuration = new Configuration();
-//            configuration.configure("hibernate.cfg.xml");
-//
-//            standardServiceRegistry = new StandardServiceRegistryBuilder()
-//                    .applySettings(configuration.getProperties())
-//                    .build();
-
             standardServiceRegistry = new StandardServiceRegistryBuilder()
                     .configure()
                     .build();
@@ -66,18 +59,7 @@ public class Main {
         dbHibernateServiceUser.update(item);
         System.out.println(dbHibernateServiceUser.getItem(1, User.class));
 
-
-//        Account account = new Account();
-//        account.setType("Ivan");
-//        account.setRest(BigDecimal.valueOf(10));
-//
-//        DBHibernateServiceAccountImpl dbHibernateServiceAccount = new DBHibernateServiceAccountImpl(standardServiceRegistry);
-//        dbHibernateServiceAccount.create(account);
-//
-//        Account itemAccount = dbHibernateServiceAccount.getItem(1, Account.class);
-//        System.out.println(itemAccount);
-//        itemAccount.setType("ChangedAccount");
-//        dbHibernateServiceAccount.update(itemAccount);
-//        System.out.println(dbHibernateServiceAccount.getItem(1, Account.class));
+        Thread.sleep(20000);
+        System.out.println(dbHibernateServiceUser.getItem(1, User.class));
     }
 }
