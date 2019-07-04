@@ -14,7 +14,7 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     private final long lifeTimeMs;
     private final boolean isEternal;
 
-    private final SoftReference<Map<K, CacheItem<V>>> cacheItems = new SoftReference<>(new LinkedHashMap<>());
+    private final Map<K, SoftReference<CacheItem<V>>> cacheItems = new LinkedHashMap<>();
     private final Timer timer = new Timer();
 
     private int hit = 0;
@@ -28,16 +28,16 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
     @Override
     public void put(K key, V value) {
-        if(cacheItems.get().size() == maxElements) {
-            K item = cacheItems.get().keySet().iterator().next();
-            cacheItems.get().remove(item);
+        if(cacheItems.size() == maxElements) {
+            K item = cacheItems.keySet().iterator().next();
+            cacheItems.remove(item);
         }
 
-        cacheItems.get().put(key, new CacheItem<>(value));
+        cacheItems.put(key, new SoftReference<>(new CacheItem<>(value)));
 
         if (!isEternal) {
             if (lifeTimeMs != 0) {
-                TimerTask lifeTimerTask = getTimerTask(key, lifeElement -> lifeElement.getCreationTime() + lifeTimeMs);
+                TimerTask lifeTimerTask = getTimerTask(key, lifeElement -> lifeElement.get().getCreationTime() + lifeTimeMs);
                 timer.schedule(lifeTimerTask, lifeTimeMs);
             }
         }
@@ -45,20 +45,20 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
     @Override
     public V get(K key, Function<K, V> getFunction) {
-        CacheItem<V> cacheItem = cacheItems.get().get(key);
+        SoftReference<CacheItem<V>> cacheItem = cacheItems.get(key);
 
         if(cacheItem == null) {
             miss++;
             V dbItem = getFunction.apply(key);
             if(dbItem != null) {
                 put(key, dbItem);
-                cacheItem = cacheItems.get().get(key);
+                cacheItem = cacheItems.get(key);
             }
         } else {
             hit++;
         }
 
-        return cacheItem != null ? cacheItem.getValue() : null;
+        return cacheItem != null ? cacheItem.get().getValue() : null;
     }
 
     @Override
@@ -76,13 +76,13 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
         timer.cancel();
     }
 
-    private TimerTask getTimerTask(final K key, Function<CacheItem<V>, Long> timeFunction) {
+    private TimerTask getTimerTask(final K key, Function<SoftReference<CacheItem<V>>, Long> timeFunction) {
         return new TimerTask() {
             @Override
             public void run() {
-                CacheItem<V> item = cacheItems.get().get(key);
+                SoftReference<CacheItem<V>> item = cacheItems.get(key);
                 if (item == null || isT1BeforeT2(timeFunction.apply(item), System.currentTimeMillis())) {
-                    cacheItems.get().remove(key);
+                    cacheItems.remove(key);
                     this.cancel();
                 }
             }
