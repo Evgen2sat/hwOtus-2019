@@ -29,6 +29,8 @@ public class DBHibernateServiceAccountImpl implements DBService<Account> {
 
             session.save(data);
             session.getTransaction().commit();
+
+            cacheEngine.put(data.getNo(), data);
         }
     }
 
@@ -39,6 +41,8 @@ public class DBHibernateServiceAccountImpl implements DBService<Account> {
 
             session.update(data);
             session.getTransaction().commit();
+
+            cacheEngine.put(data.getNo(), data);
         }
     }
 
