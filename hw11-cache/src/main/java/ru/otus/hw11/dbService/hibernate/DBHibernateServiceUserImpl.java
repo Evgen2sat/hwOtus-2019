@@ -47,7 +47,10 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            return cacheEngine.get(id, userId -> session.get(clazz, userId));
+            return cacheEngine.get(id, userId -> {
+                session.beginTransaction();
+                return session.get(clazz, userId);
+            });
         }
     }
 
