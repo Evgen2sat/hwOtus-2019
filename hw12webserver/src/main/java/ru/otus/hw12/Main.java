@@ -2,13 +2,7 @@ package ru.otus.hw12;
 
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import ru.otus.hw12.dbService.hibernate.DBHibernateServiceUserImpl;
-import ru.otus.hw12.dto.Address;
-import ru.otus.hw12.dto.Phone;
-import ru.otus.hw12.dto.User;
-
-import java.util.ArrayList;
-import java.util.List;
+import ru.otus.hw12.jetty.JettyServer;
 
 public class Main {
 
@@ -25,6 +19,7 @@ public class Main {
     }
 
     public static void main(final String[] args) throws Exception {
+/*
         Address address = new Address();
         address.setStreet("STREET");
 
@@ -62,6 +57,8 @@ public class Main {
             Thread.sleep(20000);
             System.out.println(dbHibernateServiceUser.getItem(1, User.class));
         }
-
+*/
+        JettyServer jettyServer = new JettyServer();
+        jettyServer.start();
     }
 }
