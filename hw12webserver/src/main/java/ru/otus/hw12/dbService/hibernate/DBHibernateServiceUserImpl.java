@@ -9,6 +9,12 @@ import ru.otus.hw12.cache.CacheEngineImpl;
 import ru.otus.hw12.dbService.DBService;
 import ru.otus.hw12.dto.User;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.List;
+
 public class DBHibernateServiceUserImpl implements DBService<User> {
     private final SessionFactory sessionFactory;
     private final CacheEngine<Long, User> cacheEngine;
@@ -49,12 +55,25 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
     @Override
     public User getItem(long id, Class<User> clazz) {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-
             return cacheEngine.get(id, userId -> {
                 session.beginTransaction();
                 return session.get(clazz, userId);
             });
+        }
+    }
+
+    @Override
+    public List<User> getItems() {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<User> cq = cb.createQuery(User.class);
+            Root<User> rootEntry = cq.from(User.class);
+            CriteriaQuery<User> all = cq.select(rootEntry);
+
+            TypedQuery<User> allQuery = session.createQuery(all);
+            return allQuery.getResultList();
         }
     }
 

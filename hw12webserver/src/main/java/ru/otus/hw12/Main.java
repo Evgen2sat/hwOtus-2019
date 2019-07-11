@@ -2,7 +2,15 @@ package ru.otus.hw12;
 
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.otus.hw12.dbService.DBService;
+import ru.otus.hw12.dbService.hibernate.DBHibernateServiceUserImpl;
+import ru.otus.hw12.dto.Address;
+import ru.otus.hw12.dto.Phone;
+import ru.otus.hw12.dto.User;
 import ru.otus.hw12.jetty.JettyServer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -19,7 +27,6 @@ public class Main {
     }
 
     public static void main(final String[] args) throws Exception {
-/*
         Address address = new Address();
         address.setStreet("STREET");
 
@@ -44,7 +51,7 @@ public class Main {
         phones.add(phone3);
         person.setPhones(phones);
 
-        try(DBHibernateServiceUserImpl dbHibernateServiceUser = new DBHibernateServiceUserImpl(standardServiceRegistry)) {
+        try(DBService<User> dbHibernateServiceUser = new DBHibernateServiceUserImpl(standardServiceRegistry)) {
             dbHibernateServiceUser.create(person);
 
             User item = dbHibernateServiceUser.getItem(1, User.class);
@@ -52,13 +59,13 @@ public class Main {
             item.setName("ChangedUser");
             item.getPhones().get(0).setNumber("99999999999999");
             dbHibernateServiceUser.update(item);
-            System.out.println(dbHibernateServiceUser.getItem(1, User.class));
+//            System.out.println(dbHibernateServiceUser.getItem(1, User.class));
 
-            Thread.sleep(20000);
-            System.out.println(dbHibernateServiceUser.getItem(1, User.class));
+//            Thread.sleep(20000);
+//            System.out.println(dbHibernateServiceUser.getItem(1, User.class));
         }
-*/
-        JettyServer jettyServer = new JettyServer();
+
+        JettyServer jettyServer = new JettyServer(standardServiceRegistry);
         jettyServer.start();
     }
 }

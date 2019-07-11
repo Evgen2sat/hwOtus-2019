@@ -9,7 +9,7 @@
 
         <property name="hibernate.connection.url">jdbc:h2:mem:testDB;DB_CLOSE_DELAY=-1</property>
         <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.hbm2ddl.auto">create</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
         <mapping class="ru.otus.hw12.dto.User"/>
         <mapping class="ru.otus.hw12.dto.Address"/>
         <mapping class="ru.otus.hw12.dto.Phone"/>
