@@ -11,7 +11,5 @@
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
         <mapping class="ru.otus.hw12.dto.User"/>
-        <mapping class="ru.otus.hw12.dto.Address"/>
-        <mapping class="ru.otus.hw12.dto.Phone"/>
     </session-factory>
 </hibernate-configuration>

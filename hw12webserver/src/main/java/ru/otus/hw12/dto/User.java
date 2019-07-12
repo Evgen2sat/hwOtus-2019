@@ -14,13 +14,6 @@ public class User {
     private String name;
     private int age;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
-    private Address address;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Phone> phones = new ArrayList<>();
-
     public Long getId() {
         return id;
     }
@@ -45,30 +38,12 @@ public class User {
         this.age = age;
     }
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public List<Phone> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(List<Phone> phones) {
-        this.phones = phones;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
-                ", address=" + address +
-                ", phones=" + phones +
                 '}';
     }
 }
