@@ -5,17 +5,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 
 public class AdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String resultAsString = "<p>Test PAGE</p>";
-
+        InputStream htmlFile = AdminServlet.class.getResourceAsStream("/static/users.html");
         resp.setContentType("text/html");
-        resp.setStatus(HttpServletResponse.SC_OK);
-        PrintWriter printWriter = resp.getWriter();
-        printWriter.print(resultAsString);
-        printWriter.flush();
+        PrintWriter writer = resp.getWriter();
+        byte[] bytes=new byte[htmlFile.available()];
+        htmlFile.read(bytes);
+        resp.setContentLength(bytes.length);
+        writer.print(new String(bytes));
+        writer.flush();
+        writer.close();
     }
 }

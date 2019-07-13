@@ -48,11 +48,11 @@
         }
     </script>
 </head>
-<body onload="getDataFromServer();">
-
+<body>
 Имя: <input id="name" type="text" size="40"><br/>
 Возраст: <input id="age" type="number" size="40"><br/>
 <input id="btnSave" type="button" value="Добавить" onclick="saveUser();" />
+<input id="btnRefresh" type="button" value="Обновить таблицу" onclick="getDataFromServer();" />
 
 <table id='Users'>
     <tr>

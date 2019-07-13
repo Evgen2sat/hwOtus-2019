@@ -9,16 +9,12 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import ru.otus.hw12.Main;
-import ru.otus.hw12.dbService.DBService;
 import ru.otus.hw12.dbService.hibernate.DBHibernateServiceUserImpl;
-import ru.otus.hw12.dto.User;
-import ru.otus.hw12.jetty.filters.SimpleFilter;
 import ru.otus.hw12.jetty.servlets.AdminServlet;
 import ru.otus.hw12.jetty.servlets.UserServlet;
 
@@ -46,8 +42,6 @@ public class JettyServer {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new AdminServlet()), "/admin");
         context.addServlet(new ServletHolder(new UserServlet(new DBHibernateServiceUserImpl(standardServiceRegistry))), "/admin/users");
-
-        //context.addFilter(new FilterHolder(new SimpleFilter()), "/*", null);
 
         Server server = new Server(port);
         server.setHandler(new HandlerList(context));

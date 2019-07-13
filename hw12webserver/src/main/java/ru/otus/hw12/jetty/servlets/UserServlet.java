@@ -48,18 +48,18 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        StringBuffer jb = new StringBuffer();
+        StringBuffer stringBuffer = new StringBuffer();
         String line = null;
         try {
             BufferedReader reader = req.getReader();
             while ((line = reader.readLine()) != null)
-                jb.append(line);
+                stringBuffer.append(line);
         } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
-        User user = gson.fromJson(jb.toString(), User.class);
+        User user = gson.fromJson(stringBuffer.toString(), User.class);
 
         try {
             userDBService.create(user);
