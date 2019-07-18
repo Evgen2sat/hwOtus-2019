@@ -5,7 +5,7 @@
     <title>Title</title>
     <script type="text/JavaScript">
         function getDataFromServer() {
-            fetch('http://localhost:8080/admin/users')
+            fetch('/hw13DI/admin/users')
                 .then(function (response) {
                     return response.json();
                 })
@@ -36,7 +36,7 @@
         }
 
         function saveUser() {
-            fetch('http://localhost:8080/admin/users', {
+            fetch('/hw13DI/admin/users', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

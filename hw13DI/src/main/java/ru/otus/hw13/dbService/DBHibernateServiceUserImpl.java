@@ -1,9 +1,11 @@
-package ru.otus.hw13.dbService.hibernate;
+package ru.otus.hw13.dbService;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.springframework.stereotype.Service;
+import ru.otus.hw13.Main;
 import ru.otus.hw13.cache.CacheEngine;
 import ru.otus.hw13.cache.CacheEngineImpl;
 import ru.otus.hw13.dbService.DBService;
@@ -15,18 +17,27 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+@Service
 public class DBHibernateServiceUserImpl implements DBService<User> {
     private final SessionFactory sessionFactory;
-    private final CacheEngine<Long, User> cacheEngine;
+//    private final CacheEngine<Long, User> cacheEngine;
+//
+    private CacheEngine<Long, User> cacheEngine = new CacheEngineImpl<>(3, 10000, false);
 
-
-    public DBHibernateServiceUserImpl(StandardServiceRegistry standardServiceRegistry) {
-        this.sessionFactory = new MetadataSources(standardServiceRegistry)
-                                        .buildMetadata()
-                                        .buildSessionFactory();
-
-        cacheEngine = new CacheEngineImpl<>(3, 10000, false);
+    public DBHibernateServiceUserImpl() {
+        this.sessionFactory = new MetadataSources(Main.getStandardServiceRegistry())
+                                .buildMetadata()
+                                .buildSessionFactory();
     }
+
+
+//    public DBHibernateServiceUserImpl(StandardServiceRegistry standardServiceRegistry) {
+//        this.sessionFactory = new MetadataSources(standardServiceRegistry)
+//                                        .buildMetadata()
+//                                        .buildSessionFactory();
+//
+//        cacheEngine = new CacheEngineImpl<>(3, 10000, false);
+//    }
 
     @Override
     public void create(User data) {
