@@ -2,6 +2,7 @@ package ru.otus.hw13;
 
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
 
@@ -22,6 +23,6 @@ public class Main {
     }
 
     public static void main(final String[] args) throws Exception {
-
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
     }
 }
