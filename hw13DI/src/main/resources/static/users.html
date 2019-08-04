@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/JavaScript">
+        function getDataFromServer() {
+            fetch('/hw13DI/admin/users')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    let table = window.document.getElementById('Users');
+
+                    while(table.hasChildNodes())
+                    {
+                        table.removeChild(table.firstChild);
+                    }
+
+                    let header = document.createElement('tr');
+                    header.innerHTML =
+                        '<th>' + 'id' + '</th>' +
+                        '<th>' + 'name' + '</th>' +
+                        '<th>' + 'age' + '</th>';
+                    table.appendChild(header)
+
+                    for (let i = 0; data.length > i; i++) {
+                        let row = document.createElement('tr');
+                        row.innerHTML =
+                            '<td>' + data[i].id + '</td>' +
+                            '<td>' + data[i].name + '</td>' +
+                            '<td>' + data[i].age + '</td>';
+                        table.appendChild(row)
+                    }
+                })
+        }
+
+        function saveUser() {
+            fetch('/hw13DI/admin/users', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }, body: JSON.stringify({name: document.getElementById("name").value, age: document.getElementById("age").value})
+            }).then(function (value) {
+                getDataFromServer();
+            })
+        }
+    </script>
+</head>
+<body>
+Имя: <input id="name" type="text" size="40"><br/>
+Возраст: <input id="age" type="number" size="40"><br/>
+<input id="btnSave" type="button" value="Добавить" onclick="saveUser();" />
+<input id="btnRefresh" type="button" value="Обновить таблицу" onclick="getDataFromServer();" />
+
+<table id='Users'>
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>age</th>
+    </tr>
+</table>
+</body>
+</html>
