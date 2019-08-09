@@ -1,5 +1,8 @@
 package ru.otus.hw14;
 
+import java.util.LinkedList;
+import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,11 +31,15 @@ public class App {
         thread2.start();
     }
 
-    private void printCount() {
+    private synchronized void printCount() {
         while (true) {
 
             if (lastActiveThreadId.get() == Thread.currentThread().getId()) {
-                continue;
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             System.out.println(Thread.currentThread().getName() + ": " + count.get());
@@ -53,6 +60,8 @@ public class App {
             }
 
             counterCallMethod.incrementAndGet();
+
+            notify();
 
             try {
                 Thread.sleep(1000);
