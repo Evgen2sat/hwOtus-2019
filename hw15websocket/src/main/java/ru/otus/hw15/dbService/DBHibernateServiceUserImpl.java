@@ -28,7 +28,7 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
     }
 
     @Override
-    public void create(User data) {
+    public long create(User data) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
@@ -36,6 +36,8 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
             session.getTransaction().commit();
 
             cacheEngine.put(data.getId(), data);
+
+            return data.getId();
         }
     }
 

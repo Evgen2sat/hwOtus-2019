@@ -7,19 +7,6 @@
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/app.js"></script>
-    <script type="text/JavaScript">
-        function saveUser() {
-            fetch('/hw13DI/admin/users', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }, body: JSON.stringify({name: document.getElementById("name").value, age: document.getElementById("age").value})
-            }).then(function (value) {
-                getDataFromServer();
-            })
-        }
-    </script>
 </head>
 <body onload="connect()">
 Имя: <input id="name" type="text" size="40"><br/>
