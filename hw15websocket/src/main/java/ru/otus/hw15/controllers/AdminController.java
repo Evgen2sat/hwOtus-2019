@@ -32,11 +32,6 @@ public class AdminController {
     @MessageMapping("/admin/users")
     @SendTo("/admin/users")
     public String createUser(User message) throws Exception {
-
-        User user = new User();
-        user.setName(HtmlUtils.htmlEscape(message.getName()));
-        user.setAge(message.getAge());
-
-        return new Gson().toJson(dbService.getItem(dbService.create(user), User.class));
+        return new Gson().toJson(dbService.getItem(dbService.create(message), User.class));
     }
 }
