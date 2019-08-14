@@ -43,11 +43,7 @@ public class MessageSystemImpl implements MessageSystem<User> {
     }
 
     @Override
-    public Optional<User> getCreatedItem() {
-
-        if (dbServiceQueue.isEmpty())
-            return Optional.empty();
-        else
-            return Optional.of(dbServiceQueue.poll());
+    public User getCreatedItem() {
+        return dbServiceQueue.poll();
     }
 }

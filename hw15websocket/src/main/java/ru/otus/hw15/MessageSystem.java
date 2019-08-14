@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface MessageSystem<T> {
     void createItem(T item);
 
-    Optional<T> getCreatedItem();
+    T getCreatedItem();
 }
