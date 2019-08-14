@@ -8,4 +8,5 @@ public interface DBService<T> extends AutoCloseable {
     T getItem(long id, Class<T> clazz);
     void createTable();
     List<T> getItems();
+    T getCreatedItem();
 }

@@ -13,11 +13,14 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Service
 public class DBHibernateServiceUserImpl implements DBService<User> {
     private final SessionFactory sessionFactory;
     private final CacheEngine<Long, User> cacheEngine;
+    private Queue<User> createdUserQueue = new ConcurrentLinkedQueue<>();
 
     public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine) {
         this.sessionFactory = new MetadataSources(Main.getStandardServiceRegistry())
@@ -36,6 +39,8 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
             session.getTransaction().commit();
 
             cacheEngine.put(data.getId(), data);
+
+            createdUserQueue.add(data);
 
             return data.getId();
         }
@@ -86,5 +91,10 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
     @Override
     public void close() throws Exception {
         cacheEngine.dispose();
+    }
+
+    @Override
+    public User getCreatedItem() {
+        return createdUserQueue.poll();
     }
 }
