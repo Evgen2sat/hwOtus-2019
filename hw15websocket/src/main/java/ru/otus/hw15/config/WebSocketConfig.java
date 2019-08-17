@@ -1,4 +1,4 @@
-package ru.otus.hw15;
+package ru.otus.hw15.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

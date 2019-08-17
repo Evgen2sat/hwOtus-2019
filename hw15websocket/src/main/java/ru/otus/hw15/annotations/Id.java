@@ -1,4 +1,4 @@
-package ru.otus.hw15;
+package ru.otus.hw15.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -7,31 +7,33 @@ import org.springframework.stereotype.Service;
 import ru.otus.hw15.Main;
 import ru.otus.hw15.cache.CacheEngine;
 import ru.otus.hw15.dto.User;
+import ru.otus.hw15.messageSystem.Message;
+import ru.otus.hw15.messageSystem.MessageSystem;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Service
 public class DBHibernateServiceUserImpl implements DBService<User> {
     private final SessionFactory sessionFactory;
     private final CacheEngine<Long, User> cacheEngine;
-    private Queue<User> createdUserQueue = new ConcurrentLinkedQueue<>();
+    private final MessageSystem messageSystem;
 
-    public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine) {
+    public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, MessageSystem messageSystem) {
         this.sessionFactory = new MetadataSources(Main.getStandardServiceRegistry())
                                 .buildMetadata()
                                 .buildSessionFactory();
 
         this.cacheEngine = cacheEngine;
+        this.messageSystem = messageSystem;
+        this.messageSystem.setDatabaseClient(this);
     }
 
     @Override
-    public long create(User data) {
+    public User create(User data) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
@@ -40,9 +42,7 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
 
             cacheEngine.put(data.getId(), data);
 
-            createdUserQueue.add(data);
-
-            return data.getId();
+            return data;
         }
     }
 
@@ -94,7 +94,7 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
     }
 
     @Override
-    public User getCreatedItem() {
-        return createdUserQueue.poll();
+    public void accept(Message<User> message) throws InterruptedException {
+        messageSystem.sendMessage(messageSystem.createMsgToFrontend(create(message.getData())));
     }
 }
