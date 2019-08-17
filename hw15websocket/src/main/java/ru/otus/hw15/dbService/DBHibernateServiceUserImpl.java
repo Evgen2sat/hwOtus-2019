@@ -16,16 +16,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-@Service
 public class DBHibernateServiceUserImpl implements DBService<User> {
     private final SessionFactory sessionFactory;
     private final CacheEngine<Long, User> cacheEngine;
     private final MessageSystem messageSystem;
 
-    public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, MessageSystem messageSystem) {
-        this.sessionFactory = new MetadataSources(Main.getStandardServiceRegistry())
-                                .buildMetadata()
-                                .buildSessionFactory();
+    public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, MessageSystem messageSystem, SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
 
         this.cacheEngine = cacheEngine;
         this.messageSystem = messageSystem;
