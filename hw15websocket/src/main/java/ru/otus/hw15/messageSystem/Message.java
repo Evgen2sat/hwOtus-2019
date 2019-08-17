@@ -22,6 +22,4 @@ public abstract class Message<T> {
     public void setData(T data) {
         this.data = data;
     }
-
-    protected abstract void setToMessageClient(MessageClient client);
 }

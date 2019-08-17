@@ -1,8 +1,5 @@
 package ru.otus.hw15.messageSystem;
 
-import org.springframework.stereotype.Service;
-import ru.otus.hw15.Main;
-import ru.otus.hw15.dbService.DBHibernateServiceUserImpl;
 import ru.otus.hw15.dto.User;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -30,7 +27,7 @@ public class MessageSystemImpl implements MessageSystem {
 
     @Override
     public Message<User> createMsgToDatabase(User data) {
-        Message<User> messageToDatabase = new MessageFromFrontend();
+        MessageToDatabase messageToDatabase = new MessageToDatabase();
         messageToDatabase.setData(data);
         messageToDatabase.setQueueTo(messageForDatabaseQueue);
 
@@ -39,7 +36,7 @@ public class MessageSystemImpl implements MessageSystem {
 
     @Override
     public Message<User> createMsgToFrontend(User data) {
-        Message<User> messageToFrontend = new MessageFromDatabase();
+        MessageToFrontend messageToFrontend = new MessageToFrontend();
         messageToFrontend.setData(data);
         messageToFrontend.setQueueTo(messageForFrontendQueue);
 
@@ -81,7 +78,7 @@ public class MessageSystemImpl implements MessageSystem {
     public void setDatabaseClient(MessageClient messageClient) {
         this.databaseClient = messageClient;
 
-        outputMessageDatabaseExecutorService.execute(() -> processMsgOutput(messageForDatabaseQueue, databaseClient));
+        outputMessageDatabaseExecutorService.execute(() -> processMsgOutput(messageForDatabaseQueue, this.databaseClient));
         outputMessageDatabaseExecutorService.shutdown();
     }
 
@@ -89,7 +86,7 @@ public class MessageSystemImpl implements MessageSystem {
     public void setFrontendClient(MessageClient messageClient) {
         this.frontendClient = messageClient;
 
-        outputMessageForFrontendExecutorService.execute(() -> processMsgOutput(messageForFrontendQueue, frontendClient));
+        outputMessageForFrontendExecutorService.execute(() -> processMsgOutput(messageForFrontendQueue, this.frontendClient));
         outputMessageForFrontendExecutorService.shutdown();
     }
 }
