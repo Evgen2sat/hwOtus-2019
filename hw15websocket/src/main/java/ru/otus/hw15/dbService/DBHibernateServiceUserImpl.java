@@ -2,13 +2,11 @@ package ru.otus.hw15.dbService;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.springframework.stereotype.Service;
-import ru.otus.hw15.Main;
 import ru.otus.hw15.cache.CacheEngine;
 import ru.otus.hw15.dto.User;
-import ru.otus.hw15.messageSystem.Message;
+import ru.otus.hw15.messageSystem.Address;
 import ru.otus.hw15.messageSystem.MessageSystem;
+import ru.otus.hw15.messageSystem.MessageSystemContext;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,14 +17,15 @@ import java.util.List;
 public class DBHibernateServiceUserImpl implements DBService<User> {
     private final SessionFactory sessionFactory;
     private final CacheEngine<Long, User> cacheEngine;
-    private final MessageSystem messageSystem;
+    private final MessageSystemContext messageSystemContext;
+    private final Address address;
 
-    public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, MessageSystem messageSystem, SessionFactory sessionFactory) {
+    public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, MessageSystemContext messageSystemContext, SessionFactory sessionFactory, Address address) {
         this.sessionFactory = sessionFactory;
 
         this.cacheEngine = cacheEngine;
-        this.messageSystem = messageSystem;
-        this.messageSystem.setDatabaseClient(this);
+        this.messageSystemContext = messageSystemContext;
+        this.address = address;
     }
 
     @Override
@@ -91,7 +90,18 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
     }
 
     @Override
-    public void accept(Message<User> message) throws InterruptedException {
-        messageSystem.sendMessage(messageSystem.createMsgToFrontend(create(message.getData())));
+    public Address getAddress() {
+        return address;
+    }
+
+    @Override
+    public void init() {
+        messageSystemContext.getMessageSystem().addAddresse(this);
+        messageSystemContext.setDbAddress(address);
+    }
+
+    @Override
+    public MessageSystem getMS() {
+        return messageSystemContext.getMessageSystem();
     }
 }

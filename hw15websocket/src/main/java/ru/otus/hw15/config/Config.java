@@ -6,13 +6,17 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Controller;
 import ru.otus.hw15.Main;
 import ru.otus.hw15.cache.CacheEngine;
 import ru.otus.hw15.cache.CacheEngineImpl;
+import ru.otus.hw15.controllers.AdminController;
 import ru.otus.hw15.dbService.DBHibernateServiceUserImpl;
 import ru.otus.hw15.dbService.DBService;
 import ru.otus.hw15.dto.User;
+import ru.otus.hw15.messageSystem.Address;
 import ru.otus.hw15.messageSystem.MessageSystem;
+import ru.otus.hw15.messageSystem.MessageSystemContext;
 import ru.otus.hw15.messageSystem.MessageSystemImpl;
 
 @Configuration
@@ -31,7 +35,7 @@ public class Config {
     }
 
     @Bean
-    public DBService<User> initDBService(CacheEngine<Long, User> cacheEngine, MessageSystem messageSystem) {
+    public DBService<User> initDBService(CacheEngine<Long, User> cacheEngine, MessageSystemContext messageSystemContext) {
         StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder()
                 .configure()
                 .build();
@@ -40,6 +44,20 @@ public class Config {
                 .buildMetadata()
                 .buildSessionFactory();
 
-        return new DBHibernateServiceUserImpl(cacheEngine, messageSystem, sessionFactory);
+        DBHibernateServiceUserImpl dbHibernateServiceUser = new DBHibernateServiceUserImpl(cacheEngine, messageSystemContext, sessionFactory, new Address());
+        dbHibernateServiceUser.init();
+
+        return dbHibernateServiceUser;
     }
+
+    @Bean
+    public MessageSystemContext initMessageSystemContext(MessageSystem messageSystem) {
+        return new MessageSystemContext(messageSystem);
+    }
+
+    @Bean
+    public Address initAddress() {
+        return new Address();
+    }
+
 }

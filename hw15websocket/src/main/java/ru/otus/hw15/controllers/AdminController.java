@@ -8,21 +8,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.otus.hw15.dto.User;
+import ru.otus.hw15.messageSystem.Address;
 import ru.otus.hw15.messageSystem.Message;
-import ru.otus.hw15.messageSystem.MessageClient;
 import ru.otus.hw15.messageSystem.MessageSystem;
+import ru.otus.hw15.messageSystem.MessageSystemContext;
+import ru.otus.hw15.messageSystem.message.MsgCreateUser;
 
 @Controller
-public class AdminController implements MessageClient<User> {
+public class AdminController implements FrontendService {
 
-    private final MessageSystem messageSystem;
+    private final MessageSystemContext messageSystemContext;
+    private final Address address;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    public AdminController(MessageSystem messageSystem) {
-        this.messageSystem = messageSystem;
-        this.messageSystem.setFrontendClient(this);
+    public AdminController(MessageSystemContext messageSystemContext, Address address) {
+        this.messageSystemContext = messageSystemContext;
+        this.address = address;
+
+        init();
     }
 
     @GetMapping({"/"})
@@ -36,12 +41,30 @@ public class AdminController implements MessageClient<User> {
     }
 
     @MessageMapping("/admin/users")
-    public void createUser(User message) throws InterruptedException {
-        messageSystem.sendMessage(messageSystem.createMsgToDatabase(message));
+    @Override
+    public void createUser(User user) {
+        Message msgCreateUser = new MsgCreateUser(getAddress(), messageSystemContext.getDbAddress(), user);
+        messageSystemContext.getMessageSystem().sendMessage(msgCreateUser);
     }
 
     @Override
-    public void accept(Message<User> message) {
-        simpMessagingTemplate.convertAndSend("/admin/users", new Gson().toJson(message.getData()));
+    public void accept(User user) {
+        simpMessagingTemplate.convertAndSend("/admin/users", new Gson().toJson(user));
+    }
+
+    @Override
+    public Address getAddress() {
+        return address;
+    }
+
+    @Override
+    public void init() {
+        messageSystemContext.getMessageSystem().addAddresse(this);
+        messageSystemContext.setFrontendAddress(address);
+    }
+
+    @Override
+    public MessageSystem getMS() {
+        return messageSystemContext.getMessageSystem();
     }
 }

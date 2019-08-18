@@ -2,45 +2,30 @@ package ru.otus.hw15.messageSystem;
 
 import ru.otus.hw15.dto.User;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.*;
 
 public class MessageSystemImpl implements MessageSystem {
 
-    private MessageClient frontendClient;
-    private MessageClient databaseClient;
 
     private ArrayBlockingQueue<Message> inputMessageQueue = new ArrayBlockingQueue<>(10);
-    private ArrayBlockingQueue<Message> messageForFrontendQueue = new ArrayBlockingQueue<>(10);
-    private ArrayBlockingQueue<Message> messageForDatabaseQueue = new ArrayBlockingQueue<>(10);
 
     private ExecutorService inputMessageExecutorService = Executors.newSingleThreadExecutor();
-    private ExecutorService outputMessageForFrontendExecutorService = Executors.newSingleThreadExecutor();
-    private ExecutorService outputMessageDatabaseExecutorService = Executors.newSingleThreadExecutor();
 
+    private Map<Address, Addresse> addresseMap = new HashMap<>();
+    private Map<Address, LinkedBlockingQueue<Message>> messageMap = new LinkedHashMap<>();
 
     @Override
-    public void sendMessage(Message message) throws InterruptedException {
-        inputMessageQueue.put(message);
+    public void addAddresse(Addresse addresse) {
+        addresseMap.put(addresse.getAddress(), addresse);
+        messageMap.put(addresse.getAddress(), new LinkedBlockingQueue<>());
     }
 
     @Override
-    public Message<User> createMsgToDatabase(User data) {
-        MessageToDatabase messageToDatabase = new MessageToDatabase();
-        messageToDatabase.setData(data);
-        messageToDatabase.setQueueTo(messageForDatabaseQueue);
-
-        return messageToDatabase;
-    }
-
-    @Override
-    public Message<User> createMsgToFrontend(User data) {
-        MessageToFrontend messageToFrontend = new MessageToFrontend();
-        messageToFrontend.setData(data);
-        messageToFrontend.setQueueTo(messageForFrontendQueue);
-
-        return messageToFrontend;
+    public void sendMessage(Message message) {
+        messageMap.get(message.getTo()).add(message);
     }
 
     @Override
@@ -52,41 +37,20 @@ public class MessageSystemImpl implements MessageSystem {
     }
 
     private void processMsgInput() {
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                Message msg = inputMessageQueue.take();
-                System.out.println("new message: " + msg);
-                msg.getQueueTo().put(msg);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+//        while (!Thread.currentThread().isInterrupted()) {
+            for (var addresse : addresseMap.entrySet()) {
+                LinkedBlockingQueue<Message> messages = messageMap.get(addresse.getKey());
+                if(messages != null && !messages.isEmpty()) {
+                    while (!Thread.currentThread().isInterrupted()) {
+                        try {
+                            Message msg = messages.take();
+                            msg.execute(addresse.getValue());
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
             }
-        }
-    }
-
-    private void processMsgOutput(ArrayBlockingQueue<Message> queue, MessageClient client) {
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                Message msg = queue.take();
-                client.accept(msg);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
-
-    @Override
-    public void setDatabaseClient(MessageClient messageClient) {
-        this.databaseClient = messageClient;
-
-        outputMessageDatabaseExecutorService.execute(() -> processMsgOutput(messageForDatabaseQueue, this.databaseClient));
-        outputMessageDatabaseExecutorService.shutdown();
-    }
-
-    @Override
-    public void setFrontendClient(MessageClient messageClient) {
-        this.frontendClient = messageClient;
-
-        outputMessageForFrontendExecutorService.execute(() -> processMsgOutput(messageForFrontendQueue, this.frontendClient));
-        outputMessageForFrontendExecutorService.shutdown();
+//        }
     }
 }

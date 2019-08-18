@@ -1,25 +1,21 @@
 package ru.otus.hw15.messageSystem;
 
-import java.util.concurrent.ArrayBlockingQueue;
+public abstract class Message {
+    private final Address to;
+    private final Address from;
 
-public abstract class Message<T> {
-    private T data;
-
-    private ArrayBlockingQueue<Message> queue;
-
-    public void setQueueTo(ArrayBlockingQueue<Message> queue) {
-        this.queue = queue;
+    public Message(Address from, Address to) {
+        this.from = from;
+        this.to = to;
     }
 
-    public ArrayBlockingQueue<Message> getQueueTo() {
-        return queue;
+    public Address getTo() {
+        return to;
     }
 
-    public T getData() {
-        return data;
+    public Address getFrom() {
+        return from;
     }
 
-    public void setData(T data) {
-        this.data = data;
-    }
+    public abstract void execute(Addresse addresse);
 }
