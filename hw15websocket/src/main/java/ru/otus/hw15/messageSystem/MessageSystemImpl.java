@@ -3,16 +3,14 @@ package ru.otus.hw15.messageSystem;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 
 public class MessageSystemImpl implements MessageSystem {
 
     private ExecutorService inputMessageExecutorService = Executors.newSingleThreadExecutor();
 
-    private Map<Address, Addresse> addresseMap = new HashMap<>();
-    private Map<Address, LinkedBlockingQueue<Message>> messageMap = new LinkedHashMap<>();
+    private ConcurrentMap<Address, Addresse> addresseMap = new ConcurrentHashMap<>();
+    private ConcurrentMap<Address, LinkedBlockingQueue<Message>> messageMap = new ConcurrentHashMap<>();
 
     @Override
     public void addAddresse(Addresse addresse) {
@@ -28,17 +26,15 @@ public class MessageSystemImpl implements MessageSystem {
     @Override
     public void init() {
         inputMessageExecutorService.execute(this::processMsgInput);
-
-
+        
         inputMessageExecutorService.shutdown();
     }
 
     private void processMsgInput() {
-//        while (!Thread.currentThread().isInterrupted()) {
-        for (var addresse : addresseMap.entrySet()) {
-            LinkedBlockingQueue<Message> messages = messageMap.get(addresse.getKey());
-            if (messages != null && !messages.isEmpty()) {
-                while (!Thread.currentThread().isInterrupted()) {
+        while (!Thread.currentThread().isInterrupted()) {
+            for (var addresse : addresseMap.entrySet()) {
+                LinkedBlockingQueue<Message> messages = messageMap.get(addresse.getKey());
+                if (messages != null && !messages.isEmpty()) {
                     try {
                         Message msg = messages.take();
                         msg.execute(addresse.getValue());
@@ -48,6 +44,5 @@ public class MessageSystemImpl implements MessageSystem {
                 }
             }
         }
-//        }
     }
 }
