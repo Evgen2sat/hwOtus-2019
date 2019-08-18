@@ -26,7 +26,7 @@ public class MessageSystemImpl implements MessageSystem {
     @Override
     public void init() {
         inputMessageExecutorService.execute(this::processMsgInput);
-        
+
         inputMessageExecutorService.shutdown();
     }
 
