@@ -1,16 +1,13 @@
 package ru.otus.hw15.messageSystem;
 
-import ru.otus.hw15.dto.User;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MessageSystemImpl implements MessageSystem {
-
-
-    private ArrayBlockingQueue<Message> inputMessageQueue = new ArrayBlockingQueue<>(10);
 
     private ExecutorService inputMessageExecutorService = Executors.newSingleThreadExecutor();
 
@@ -38,19 +35,19 @@ public class MessageSystemImpl implements MessageSystem {
 
     private void processMsgInput() {
 //        while (!Thread.currentThread().isInterrupted()) {
-            for (var addresse : addresseMap.entrySet()) {
-                LinkedBlockingQueue<Message> messages = messageMap.get(addresse.getKey());
-                if(messages != null && !messages.isEmpty()) {
-                    while (!Thread.currentThread().isInterrupted()) {
-                        try {
-                            Message msg = messages.take();
-                            msg.execute(addresse.getValue());
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
+        for (var addresse : addresseMap.entrySet()) {
+            LinkedBlockingQueue<Message> messages = messageMap.get(addresse.getKey());
+            if (messages != null && !messages.isEmpty()) {
+                while (!Thread.currentThread().isInterrupted()) {
+                    try {
+                        Message msg = messages.take();
+                        msg.execute(addresse.getValue());
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
+        }
 //        }
     }
 }
