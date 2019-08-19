@@ -28,3 +28,17 @@ $(function () {
     });
     $( "#btnSave" ).click(function() { sendName(); });
 });
+
+function getDataFromServer() {
+    fetch('/admin/users')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function(data) {
+            for (let i = 0; data.length > i; i++) {
+                showUsers.call(this, data[i])
+            }
+        });
+
+    connect.call(this);
+}
