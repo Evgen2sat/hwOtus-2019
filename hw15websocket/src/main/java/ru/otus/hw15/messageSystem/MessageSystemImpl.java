@@ -38,7 +38,7 @@ public class MessageSystemImpl implements MessageSystem {
                     try {
                         Message msg = messages.take();
                         msg.execute(addresse.getValue());
-                    } catch (InterruptedException e) {
+                    } catch (Exception e) {
                         Thread.currentThread().interrupt();
                     }
                 }

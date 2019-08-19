@@ -20,12 +20,12 @@ public class AdminController implements FrontendService {
     private final MessageSystemContext messageSystemContext;
     private final Address address;
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public AdminController(MessageSystemContext messageSystemContext, Address address) {
+    public AdminController(MessageSystemContext messageSystemContext, Address address, SimpMessagingTemplate simpMessagingTemplate) {
         this.messageSystemContext = messageSystemContext;
         this.address = address;
+        this.simpMessagingTemplate = simpMessagingTemplate;
 
         init();
     }
