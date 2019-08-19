@@ -1,6 +1,6 @@
 package ru.otus.hw15.messageSystem.message;
 
-import ru.otus.hw15.controllers.FrontendService;
+import ru.otus.hw15.frontendService.FrontendService;
 import ru.otus.hw15.dto.User;
 import ru.otus.hw15.messageSystem.Address;
 import ru.otus.hw15.messageSystem.MsgToFrontend;

@@ -14,6 +14,8 @@ import ru.otus.hw15.controllers.AdminController;
 import ru.otus.hw15.dbService.DBHibernateServiceUserImpl;
 import ru.otus.hw15.dbService.DBService;
 import ru.otus.hw15.dto.User;
+import ru.otus.hw15.frontendService.FrontendService;
+import ru.otus.hw15.frontendService.FrontendServiceImpl;
 import ru.otus.hw15.messageSystem.Address;
 import ru.otus.hw15.messageSystem.MessageSystem;
 import ru.otus.hw15.messageSystem.MessageSystemContext;
@@ -60,4 +62,11 @@ public class Config {
         return new Address();
     }
 
+    @Bean
+    public FrontendService initFrontendService(MessageSystemContext messageSystemContext) {
+        FrontendServiceImpl frontendService = new FrontendServiceImpl(messageSystemContext, new Address());
+        frontendService.init();
+
+        return frontendService;
+    }
 }

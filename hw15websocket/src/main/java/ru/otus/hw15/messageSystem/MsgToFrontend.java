@@ -1,6 +1,6 @@
 package ru.otus.hw15.messageSystem;
 
-import ru.otus.hw15.controllers.FrontendService;
+import ru.otus.hw15.frontendService.FrontendService;
 
 public abstract class MsgToFrontend extends Message {
     public MsgToFrontend(Address from, Address to) {

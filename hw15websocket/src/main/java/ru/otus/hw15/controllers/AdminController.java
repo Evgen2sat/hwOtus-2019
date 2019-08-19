@@ -1,33 +1,38 @@
 package ru.otus.hw15.controllers;
 
 import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.otus.hw15.dto.User;
+import ru.otus.hw15.frontendService.FrontendService;
 import ru.otus.hw15.messageSystem.Address;
 import ru.otus.hw15.messageSystem.Message;
 import ru.otus.hw15.messageSystem.MessageSystem;
 import ru.otus.hw15.messageSystem.MessageSystemContext;
 import ru.otus.hw15.messageSystem.message.MsgCreateUser;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Controller
-public class AdminController implements FrontendService {
+public class AdminController {
 
-    private final MessageSystemContext messageSystemContext;
-    private final Address address;
-
+    private final FrontendService frontendService;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final ArrayBlockingQueue<User> createdUsers;
+    private final ExecutorService createdUsersExecutorService = Executors.newSingleThreadExecutor();
 
-    public AdminController(MessageSystemContext messageSystemContext, Address address, SimpMessagingTemplate simpMessagingTemplate) {
-        this.messageSystemContext = messageSystemContext;
-        this.address = address;
+    public AdminController(FrontendService frontendService, SimpMessagingTemplate simpMessagingTemplate) {
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.frontendService = frontendService;
+        this.createdUsers = this.frontendService.getCreatedUsers();
 
-        init();
+        createdUsersExecutorService.execute(this::accept);
+        createdUsersExecutorService.shutdown();
     }
 
     @GetMapping({"/"})
@@ -41,30 +46,18 @@ public class AdminController implements FrontendService {
     }
 
     @MessageMapping("/admin/users")
-    @Override
     public void createUser(User user) {
-        Message msgCreateUser = new MsgCreateUser(getAddress(), messageSystemContext.getDbAddress(), user);
-        messageSystemContext.getMessageSystem().sendMessage(msgCreateUser);
+        frontendService.createUser(user);
     }
 
-    @Override
-    public void accept(User user) {
-        simpMessagingTemplate.convertAndSend("/admin/users", new Gson().toJson(user));
-    }
-
-    @Override
-    public Address getAddress() {
-        return address;
-    }
-
-    @Override
-    public void init() {
-        messageSystemContext.getMessageSystem().addAddresse(this);
-        messageSystemContext.setFrontendAddress(address);
-    }
-
-    @Override
-    public MessageSystem getMS() {
-        return messageSystemContext.getMessageSystem();
+    private void accept() {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                User createdUser = createdUsers.take();
+                simpMessagingTemplate.convertAndSend("/admin/users", new Gson().toJson(createdUser));
+            } catch (Exception e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 }
