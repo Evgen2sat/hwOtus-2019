@@ -31,7 +31,6 @@ public class Config {
     @Bean
     public MessageSystem initMessageSystem() {
         MessageSystemImpl messageSystem = new MessageSystemImpl();
-        messageSystem.init();
 
         return messageSystem;
     }

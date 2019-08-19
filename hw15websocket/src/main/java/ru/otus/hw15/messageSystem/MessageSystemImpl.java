@@ -11,11 +11,18 @@ public class MessageSystemImpl implements MessageSystem {
 
     private ConcurrentMap<Address, Addresse> addresseMap = new ConcurrentHashMap<>();
     private ConcurrentMap<Address, LinkedBlockingQueue<Message>> messageMap = new ConcurrentHashMap<>();
+    private ConcurrentMap<Address, ExecutorService> executorServiceConcurrentMap = new ConcurrentHashMap<>();
 
     @Override
     public void addAddresse(Addresse addresse) {
         addresseMap.put(addresse.getAddress(), addresse);
         messageMap.put(addresse.getAddress(), new LinkedBlockingQueue<>());
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(() -> processMsgInput(addresse.getAddress(), addresse));
+        executorService.shutdown();
+
+        executorServiceConcurrentMap.put(addresse.getAddress(), executorService);
     }
 
     @Override
@@ -23,26 +30,18 @@ public class MessageSystemImpl implements MessageSystem {
         messageMap.get(message.getTo()).add(message);
     }
 
-    @Override
-    public void init() {
-        inputMessageExecutorService.execute(this::processMsgInput);
-
-        inputMessageExecutorService.shutdown();
-    }
-
-    private void processMsgInput() {
-        while (!Thread.currentThread().isInterrupted()) {
-            for (var addresse : addresseMap.entrySet()) {
-                LinkedBlockingQueue<Message> messages = messageMap.get(addresse.getKey());
-                if (messages != null && !messages.isEmpty()) {
-                    try {
-                        Message msg = messages.take();
-                        msg.execute(addresse.getValue());
-                    } catch (Exception e) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
+    private void processMsgInput(Address address, Addresse addresse) {
+        LinkedBlockingQueue<Message> messages = messageMap.get(address);
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                Message msg = messages.take();
+                msg.execute(addresse);
             }
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
         }
+
+
+
     }
 }
