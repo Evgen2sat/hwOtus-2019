@@ -1,11 +1,16 @@
 package ru.otus.hw15.messageSystem;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.*;
 
 public class MessageSystemImpl implements MessageSystem {
+
+    private static Logger logger = LoggerFactory.getLogger(MessageSystemImpl.class);
 
     private ExecutorService inputMessageExecutorService = Executors.newSingleThreadExecutor();
 
@@ -38,10 +43,7 @@ public class MessageSystemImpl implements MessageSystem {
                 msg.execute(addresse);
             }
         } catch (Exception e) {
-            Thread.currentThread().interrupt();
+            logger.error("error", e);
         }
-
-
-
     }
 }

@@ -1,6 +1,8 @@
 package ru.otus.hw15.controllers;
 
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,8 @@ import java.util.concurrent.Executors;
 
 @Controller
 public class AdminController {
+
+    private static Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     private final FrontendService frontendService;
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -56,7 +60,7 @@ public class AdminController {
                 User createdUser = createdUsers.take();
                 simpMessagingTemplate.convertAndSend("/admin/users", new Gson().toJson(createdUser));
             } catch (Exception e) {
-                Thread.currentThread().interrupt();
+                logger.error("error", e);
             }
         }
     }
