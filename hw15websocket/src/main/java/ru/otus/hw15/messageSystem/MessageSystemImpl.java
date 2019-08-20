@@ -12,8 +12,6 @@ public class MessageSystemImpl implements MessageSystem {
 
     private static Logger logger = LoggerFactory.getLogger(MessageSystemImpl.class);
 
-    private ExecutorService inputMessageExecutorService = Executors.newSingleThreadExecutor();
-
     private ConcurrentMap<Address, Addresse> addresseMap = new ConcurrentHashMap<>();
     private ConcurrentMap<Address, LinkedBlockingQueue<Message>> messageMap = new ConcurrentHashMap<>();
     private ConcurrentMap<Address, ExecutorService> executorServiceConcurrentMap = new ConcurrentHashMap<>();

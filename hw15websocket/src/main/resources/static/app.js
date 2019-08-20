@@ -7,11 +7,20 @@ function connect() {
         stompClient.subscribe('/admin/users', function (data) {
             showUsers(JSON.parse(data.body));
         });
+        stompClient.subscribe('/admin/all-users', function (data) {
+            $("#users").empty();
+            showAllUsers(JSON.parse(data.body));
+        });
+        getAllUsers.call(this);
     });
 }
 
 function sendName() {
     stompClient.send("/app/admin/users", {}, JSON.stringify({'name': $("#name").val(), 'age': $("#age").val()}));
+}
+
+function getAllUsers() {
+    stompClient.send("/app/admin/all-users");
 }
 
 function showUsers(message) {
@@ -22,23 +31,21 @@ function showUsers(message) {
         "</tr>");
 }
 
+function showAllUsers(message) {
+    console.log("showAllUsers")
+    $("#users").empty();
+    for(let i = 0; i < message.length; i++) {
+        $("#users").append("<tr>" +
+            "<td>" + message[i].id + "</td>" +
+            "<td>" + message[i].name + "</td>" +
+            "<td>" + message[i].age + "</td>" +
+            "</tr>");
+    }
+}
+
 $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
     $( "#btnSave" ).click(function() { sendName(); });
 });
-
-function getDataFromServer() {
-    fetch('/admin/users')
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function(data) {
-            for (let i = 0; data.length > i; i++) {
-                showUsers.call(this, data[i])
-            }
-        });
-
-    connect.call(this);
-}

@@ -5,6 +5,8 @@ import ru.otus.hw15.dto.User;
 import ru.otus.hw15.messageSystem.Address;
 import ru.otus.hw15.messageSystem.MsgToDB;
 
+import java.util.List;
+
 public class MsgCreateUser extends MsgToDB {
 
     private final User user;
