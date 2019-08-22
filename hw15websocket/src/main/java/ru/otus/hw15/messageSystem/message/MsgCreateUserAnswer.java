@@ -10,15 +10,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class MsgCreateUserAnswer extends MsgToFrontend {
-    private final User user;
+    private final List<User> users;
 
-    public MsgCreateUserAnswer(Address from, Address to, User user) {
+    public MsgCreateUserAnswer(Address from, Address to, List<User> users) {
         super(from, to);
-        this.user = user;
+        this.users = users;
     }
 
     @Override
     public void execute(FrontendService frontendService) {
-        frontendService.accept(Collections.singletonList(user));
+        frontendService.accept(users);
     }
 }

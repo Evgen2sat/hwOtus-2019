@@ -6,11 +6,9 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Controller;
-import ru.otus.hw15.Main;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import ru.otus.hw15.cache.CacheEngine;
 import ru.otus.hw15.cache.CacheEngineImpl;
-import ru.otus.hw15.controllers.AdminController;
 import ru.otus.hw15.dbService.DBHibernateServiceUserImpl;
 import ru.otus.hw15.dbService.DBService;
 import ru.otus.hw15.dto.User;
@@ -30,9 +28,7 @@ public class Config {
 
     @Bean
     public MessageSystem initMessageSystem() {
-        MessageSystemImpl messageSystem = new MessageSystemImpl();
-
-        return messageSystem;
+        return new MessageSystemImpl();
     }
 
     @Bean
@@ -62,8 +58,8 @@ public class Config {
     }
 
     @Bean
-    public FrontendService initFrontendService(MessageSystemContext messageSystemContext) {
-        FrontendServiceImpl frontendService = new FrontendServiceImpl(messageSystemContext, new Address());
+    public FrontendService initFrontendService(MessageSystemContext messageSystemContext, SimpMessagingTemplate simpMessagingTemplate) {
+        FrontendServiceImpl frontendService = new FrontendServiceImpl(messageSystemContext, new Address(), simpMessagingTemplate);
         frontendService.init();
 
         return frontendService;

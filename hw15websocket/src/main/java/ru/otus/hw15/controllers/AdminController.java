@@ -22,23 +22,9 @@ public class AdminController {
     private static Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     private final FrontendService frontendService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
-    private final LinkedBlockingQueue<User> createdUsers;
-    private final LinkedBlockingQueue<List<User>> allUsersQueue;
-    private final ExecutorService createdUsersExecutorService = Executors.newSingleThreadExecutor();
-    private final ExecutorService allUsersExecutorService = Executors.newSingleThreadExecutor();
 
-    public AdminController(FrontendService frontendService, SimpMessagingTemplate simpMessagingTemplate) {
-        this.simpMessagingTemplate = simpMessagingTemplate;
+    public AdminController(FrontendService frontendService) {
         this.frontendService = frontendService;
-        this.createdUsers = this.frontendService.getCreatedUsers();
-        this.allUsersQueue = this.frontendService.getAllUsersQueue();
-
-        createdUsersExecutorService.execute(this::accept);
-        createdUsersExecutorService.shutdown();
-
-        allUsersExecutorService.execute(this::acceptAllUsers);
-        allUsersExecutorService.shutdown();
     }
 
     @GetMapping({"/"})
@@ -59,27 +45,5 @@ public class AdminController {
     @MessageMapping("/admin/all-users")
     public void getAllUsers() {
         frontendService.getAllUsers();
-    }
-
-    private void accept() {
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                User createdUser = createdUsers.take();
-                simpMessagingTemplate.convertAndSend("/admin/users", new Gson().toJson(createdUser));
-            } catch (Exception e) {
-                logger.error("error", e);
-            }
-        }
-    }
-
-    private void acceptAllUsers() {
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                List<User> allUsers = allUsersQueue.take();
-                simpMessagingTemplate.convertAndSend("/admin/all-users", new Gson().toJson(allUsers));
-            } catch (Exception e) {
-                logger.error("error", e);
-            }
-        }
     }
 }

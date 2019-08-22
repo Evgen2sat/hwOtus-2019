@@ -7,10 +7,6 @@ function connect() {
         stompClient.subscribe('/admin/users', function (data) {
             showUsers(JSON.parse(data.body));
         });
-        stompClient.subscribe('/admin/all-users', function (data) {
-            $("#users").empty();
-            showAllUsers(JSON.parse(data.body));
-        });
         getAllUsers.call(this);
     });
 }
@@ -24,15 +20,6 @@ function getAllUsers() {
 }
 
 function showUsers(message) {
-    $("#users").append("<tr>" +
-        "<td>" + message.id + "</td>" +
-        "<td>" + message.name + "</td>" +
-        "<td>" + message.age + "</td>" +
-        "</tr>");
-}
-
-function showAllUsers(message) {
-    console.log("showAllUsers")
     $("#users").empty();
     for(let i = 0; i < message.length; i++) {
         $("#users").append("<tr>" +

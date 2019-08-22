@@ -18,7 +18,8 @@ public class MsgCreateUser extends MsgToDB {
 
     @Override
     public void execute(DBService<User> dbService) {
-        User user = dbService.create(this.user);
-        dbService.getMS().sendMessage(new MsgCreateUserAnswer(getTo(), getFrom(), user));
+        dbService.create(this.user);
+        List<User> users = dbService.getItems();
+        dbService.getMS().sendMessage(new MsgCreateUserAnswer(getTo(), getFrom(), users));
     }
 }

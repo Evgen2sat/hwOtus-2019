@@ -1,5 +1,7 @@
 package ru.otus.hw15.frontendService;
 
+import com.google.gson.Gson;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import ru.otus.hw15.dto.User;
 import ru.otus.hw15.messageSystem.Address;
 import ru.otus.hw15.messageSystem.Message;
@@ -18,13 +20,12 @@ public class FrontendServiceImpl implements FrontendService {
 
     private final MessageSystemContext messageSystemContext;
     private final Address address;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    private final LinkedBlockingQueue<User> createdUsers = new LinkedBlockingQueue<>();
-    private final LinkedBlockingQueue<List<User>> allUsersQueue = new LinkedBlockingQueue<>();
-
-    public FrontendServiceImpl(MessageSystemContext messageSystemContext, Address address){
+    public FrontendServiceImpl(MessageSystemContext messageSystemContext, Address address, SimpMessagingTemplate simpMessagingTemplate){
         this.messageSystemContext = messageSystemContext;
         this.address = address;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @Override
@@ -41,7 +42,7 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void accept(List<User> users) {
-        createdUsers.addAll(users);
+        simpMessagingTemplate.convertAndSend("/admin/users", new Gson().toJson(users));
     }
 
     @Override
@@ -55,23 +56,8 @@ public class FrontendServiceImpl implements FrontendService {
     }
 
     @Override
-    public LinkedBlockingQueue<User> getCreatedUsers() {
-        return createdUsers;
-    }
-
-    @Override
     public void getAllUsers() {
         Message msgGetAllUsers = new MsgGetAllUsers(getAddress(), messageSystemContext.getDbAddress());
         messageSystemContext.getMessageSystem().sendMessage(msgGetAllUsers);
-    }
-
-    @Override
-    public LinkedBlockingQueue<List<User>> getAllUsersQueue() {
-        return allUsersQueue;
-    }
-
-    @Override
-    public void acceptAllUsers(List<User> users) {
-        allUsersQueue.add(users);
     }
 }

@@ -14,11 +14,5 @@ public interface FrontendService extends Addresse {
 
     void accept(List<User> users);
 
-    LinkedBlockingQueue<User> getCreatedUsers();
-
     void getAllUsers();
-
-    LinkedBlockingQueue<List<User>> getAllUsersQueue();
-
-    void acceptAllUsers(List<User> users);
 }

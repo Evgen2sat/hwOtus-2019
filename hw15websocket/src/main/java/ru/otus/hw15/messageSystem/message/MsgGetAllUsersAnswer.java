@@ -17,6 +17,6 @@ public class MsgGetAllUsersAnswer extends MsgToFrontend {
 
     @Override
     public void execute(FrontendService frontendService) {
-        frontendService.acceptAllUsers(users);
+        frontendService.accept(users);
     }
 }
