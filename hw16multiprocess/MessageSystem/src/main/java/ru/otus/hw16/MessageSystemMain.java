@@ -9,7 +9,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class MessageSystemMain {
-    private static final String CLIENT_START_COMMAND = "java -jar ../../FrontendService/target/frontend-service.jar";
+    private static final String FRONTEND_SERVER_START_COMMAND = "java -jar ../../FrontendService/target/frontend-service.jar";
+    private static final String DBSERVICE_START_COMMAND = "java -jar ../../DBService/target/dbservice-jar-with-dependencies.jar";
 
     public static void main(String[] args) throws Exception {
         new MessageSystemMain().start();
@@ -26,7 +27,7 @@ public class MessageSystemMain {
     private void startClient(ScheduledExecutorService executorService) {
         executorService.schedule(() -> {
             try {
-                new ProcessRunnerImpl().start(CLIENT_START_COMMAND);
+                new ProcessRunnerImpl().start(FRONTEND_SERVER_START_COMMAND);
             } catch (IOException e) {
                 e.printStackTrace();
             }
