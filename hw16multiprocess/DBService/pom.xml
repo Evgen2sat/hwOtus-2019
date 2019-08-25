@@ -5,15 +5,21 @@
     <parent>
         <artifactId>hw16-multiprocess</artifactId>
         <groupId>hw16-multiprocess</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>ru.otus.hw16</groupId>
     <artifactId>DBService</artifactId>
-
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>ru.otus.hw16</groupId>
+            <artifactId>MessageSystem</artifactId>
+            <version>1.0</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -23,12 +29,6 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.199</version>
-        </dependency>
-        <dependency>
-            <groupId>hw16-multiprocess</groupId>
-            <artifactId>MessageSystem</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
