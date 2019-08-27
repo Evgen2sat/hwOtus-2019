@@ -107,6 +107,22 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
 
         Message message = new Message(null, 100, MessageType.REGISTER_DB);
         out.writeObject(message);
+
+        new Thread(() -> {
+            System.out.println("В потоке ДБ");
+            while (true) {
+                try {
+                    System.out.println("Сообщение в ДБ");
+                    Object o = in.readObject();
+                    out.writeObject(new Message("TTTTTTTTTTTTTTTT", 100, MessageType.TO_FRONTEND));
+                    System.out.println("Сообщение в ДБ: " + o);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override

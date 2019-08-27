@@ -34,7 +34,9 @@ public class FrontendServiceImpl implements FrontendService {
 //        messageSystemContext.getMessageSystem().sendMessage(msgCreateUser);
         try {
 //            Message msg = new Message(user.getName(), this);
-            out.writeObject(user.getName());
+            String jsonObject = new Gson().toJson(user);
+            Message msg = new Message(jsonObject, 100, MessageType.TO_DB);
+            out.writeObject(msg);
         } catch (IOException e) {
             logger.error("error", e);
         }
