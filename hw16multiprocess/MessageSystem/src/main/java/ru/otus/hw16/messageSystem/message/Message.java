@@ -9,9 +9,9 @@ public class Message {
     private String msg;
     private SocketClient fromSocketClient;
 
-    public Message(String msg, SocketClient fromSocketClient) {
+    public Message(String msg, Socket fromSocket) {
         this.msg = msg;
-        this.fromSocketClient = fromSocketClient;
+        this.fromSocket = fromSocket;
     }
 
     public Socket getFromSocket() {

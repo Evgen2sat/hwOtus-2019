@@ -33,7 +33,7 @@ public class FrontendServiceImpl implements FrontendService {
 //        Message msgCreateUser = new MsgCreateUser(getAddress(), messageSystemContext.getDbAddress(), user);
 //        messageSystemContext.getMessageSystem().sendMessage(msgCreateUser);
         try {
-            Message msg = new Message(user.getName(), this);
+//            Message msg = new Message(user.getName(), this);
             out.writeObject(user.getName());
         } catch (IOException e) {
             logger.error("error", e);

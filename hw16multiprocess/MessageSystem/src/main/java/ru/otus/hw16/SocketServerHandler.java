@@ -33,7 +33,7 @@ public class SocketServerHandler extends Thread {
             while (!Thread.currentThread().isInterrupted()) {
                 Object msg = inputStream.readObject();
 //                System.out.println("Сообщение от клиента: " + msg);
-                messageSystem.sendMessage(new Message(clientSocket, msg.toString()));
+                messageSystem.sendMessage(new Message(msg.toString(), clientSocket));
             }
 
 
