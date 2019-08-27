@@ -19,7 +19,7 @@ public class ProcessRunnerImpl implements ProcessRunner {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("is proccess status: " + process.isAlive());
+        System.out.println("is proccess " + command + " status: " + process.isAlive());
     }
 
     @Override

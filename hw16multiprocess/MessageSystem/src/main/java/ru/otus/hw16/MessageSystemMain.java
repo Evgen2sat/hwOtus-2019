@@ -30,7 +30,7 @@ public class MessageSystemMain {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         executorService.execute(() -> startClient(FRONTEND_SERVER_START_COMMAND));
-//        executorService.execute(() -> startClient(DBSERVICE_START_COMMAND));
+        executorService.execute(() -> startClient(DBSERVICE_START_COMMAND));
 
         executorService.shutdown();
 

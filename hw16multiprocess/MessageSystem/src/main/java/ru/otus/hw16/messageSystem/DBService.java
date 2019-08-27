@@ -2,7 +2,7 @@ package ru.otus.hw16.messageSystem;
 
 import java.util.List;
 
-public interface DBService<T> extends AutoCloseable, Addresse {
+public interface DBService<T> extends AutoCloseable, Addresse, SocketClient {
     T create(T data);
 
     void update(T data);

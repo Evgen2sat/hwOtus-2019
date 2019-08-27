@@ -2,6 +2,7 @@ package ru.otus.hw16;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.hw16.dto.User;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,6 +17,7 @@ public class SocketServerHandler extends Thread {
 
     public SocketServerHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
+        System.out.println("Подключен клиент: " + this.clientSocket.toString());
     }
 
     @Override
@@ -30,6 +32,13 @@ public class SocketServerHandler extends Thread {
 
         } catch (Exception e) {
             logger.error("error", e);
+            try {
+                inputStream.close();
+                outputStream.close();
+                clientSocket.close();
+            } catch (Exception ex) {
+                logger.error("error", ex);
+            }
         }/* finally {
             try {
                 inputStream.close();

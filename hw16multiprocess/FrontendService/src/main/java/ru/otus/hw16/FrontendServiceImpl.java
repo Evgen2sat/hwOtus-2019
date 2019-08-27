@@ -1,36 +1,54 @@
 package ru.otus.hw16;
 
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import ru.otus.hw16.controllers.AdminController;
 import ru.otus.hw16.dto.User;
 import ru.otus.hw16.messageSystem.*;
+import ru.otus.hw16.messageSystem.message.Message;
 import ru.otus.hw16.messageSystem.message.MsgCreateUser;
 import ru.otus.hw16.messageSystem.message.MsgGetAllUsers;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.List;
 
 public class FrontendServiceImpl implements FrontendService {
 
-    private final MessageSystemContext messageSystemContext;
+    private static Logger logger = LoggerFactory.getLogger(AdminController.class);
+
     private final Address address;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private Socket clientSocket;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
 
-    public FrontendServiceImpl(MessageSystemContext messageSystemContext, Address address, SimpMessagingTemplate simpMessagingTemplate){
-        this.messageSystemContext = messageSystemContext;
+    public FrontendServiceImpl(Address address, SimpMessagingTemplate simpMessagingTemplate){
         this.address = address;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @Override
     public void createUser(User user) {
-        Message msgCreateUser = new MsgCreateUser(getAddress(), messageSystemContext.getDbAddress(), user);
-        messageSystemContext.getMessageSystem().sendMessage(msgCreateUser);
+//        Message msgCreateUser = new MsgCreateUser(getAddress(), messageSystemContext.getDbAddress(), user);
+//        messageSystemContext.getMessageSystem().sendMessage(msgCreateUser);
+        try {
+            out.writeObject(user.getName());
+        } catch (IOException e) {
+            logger.error("error", e);
+        }
     }
 
     @Override
-    public void init() {
-        messageSystemContext.getMessageSystem().addAddresse(this);
-        messageSystemContext.setFrontendAddress(address);
+    public void init() throws IOException {
+//        messageSystemContext.getMessageSystem().addAddresse(this);
+//        messageSystemContext.setFrontendAddress(address);
+        this.out = new ObjectOutputStream(clientSocket.getOutputStream());
+        this.in = new ObjectInputStream(clientSocket.getInputStream());
     }
 
     @Override
@@ -45,12 +63,27 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public MessageSystem getMS() {
-        return messageSystemContext.getMessageSystem();
+//        return messageSystemContext.getMessageSystem();
+        return null;
     }
 
     @Override
     public void getAllUsers() {
-        Message msgGetAllUsers = new MsgGetAllUsers(getAddress(), messageSystemContext.getDbAddress());
-        messageSystemContext.getMessageSystem().sendMessage(msgGetAllUsers);
+//        Message msgGetAllUsers = new MsgGetAllUsers(getAddress(), messageSystemContext.getDbAddress());
+//        messageSystemContext.getMessageSystem().sendMessage(msgGetAllUsers);
+    }
+
+    @Override
+    public void startConnection(String host, int port) throws IOException {
+        clientSocket = new Socket(host, port);
+        this.out = new ObjectOutputStream(clientSocket.getOutputStream());
+        this.in = new ObjectInputStream(clientSocket.getInputStream());
+    }
+
+    @Override
+    public void stopConnection() throws IOException {
+        in.close();
+        out.close();
+        clientSocket.close();
     }
 }

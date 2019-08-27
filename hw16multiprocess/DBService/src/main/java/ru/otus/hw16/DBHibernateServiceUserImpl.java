@@ -13,19 +13,26 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.List;
 
 public class DBHibernateServiceUserImpl implements DBService<User> {
     private final SessionFactory sessionFactory;
     private final CacheEngine<Long, User> cacheEngine;
-    private final MessageSystemContext messageSystemContext;
+//    private final MessageSystemContext messageSystemContext;
     private final Address address;
+    private Socket clientSocket;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
 
-    public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, MessageSystemContext messageSystemContext, SessionFactory sessionFactory, Address address) {
+    public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, /*MessageSystemContext messageSystemContext,*/ SessionFactory sessionFactory, Address address) {
         this.sessionFactory = sessionFactory;
 
         this.cacheEngine = cacheEngine;
-        this.messageSystemContext = messageSystemContext;
+//        this.messageSystemContext = messageSystemContext;
         this.address = address;
     }
 
@@ -97,12 +104,27 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
 
     @Override
     public void init() {
-        messageSystemContext.getMessageSystem().addAddresse(this);
-        messageSystemContext.setDbAddress(address);
+//        messageSystemContext.getMessageSystem().addAddresse(this);
+//        messageSystemContext.setDbAddress(address);
     }
 
     @Override
     public MessageSystem getMS() {
-        return messageSystemContext.getMessageSystem();
+//        return messageSystemContext.getMessageSystem();
+        return null;
+    }
+
+    @Override
+    public void startConnection(String host, int port) throws IOException {
+        clientSocket = new Socket(host, port);
+        out = new ObjectOutputStream(clientSocket.getOutputStream());
+        in = new ObjectInputStream(clientSocket.getInputStream());
+    }
+
+    @Override
+    public void stopConnection() throws IOException {
+        in.close();
+        out.close();
+        clientSocket.close();
     }
 }

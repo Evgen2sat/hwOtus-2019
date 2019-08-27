@@ -15,13 +15,13 @@ public class AdminController {
 
     private static Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-//    private final FrontendService frontendService;
+    private final FrontendService frontendService;
 
-    private final TestSocket testSocket;
+//    private final TestSocket testSocket;
 
-    public AdminController(/*FrontendService frontendService*/ TestSocket testSocket) {
-//        this.frontendService = frontendService;
-        this.testSocket = testSocket;
+    public AdminController(FrontendService frontendService /*TestSocket testSocket*/) {
+        this.frontendService = frontendService;
+//        this.testSocket = testSocket;
     }
 
     @GetMapping({"/"})
@@ -36,8 +36,8 @@ public class AdminController {
 
     @MessageMapping("/admin/users")
     public void createUser(User user) {
-//        frontendService.createUser(user);
-        testSocket.sendMessage(user.getName());
+        frontendService.createUser(user);
+//        testSocket.sendMessage(user.getName());
     }
 
     @MessageMapping("/admin/all-users")
