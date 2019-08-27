@@ -7,6 +7,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import ru.otus.hw16.controllers.AdminController;
 import ru.otus.hw16.dto.User;
 import ru.otus.hw16.messageSystem.*;
+import ru.otus.hw16.messageSystem.message.Message;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,6 +33,7 @@ public class FrontendServiceImpl implements FrontendService {
 //        Message msgCreateUser = new MsgCreateUser(getAddress(), messageSystemContext.getDbAddress(), user);
 //        messageSystemContext.getMessageSystem().sendMessage(msgCreateUser);
         try {
+            Message msg = new Message(user.getName(), this);
             out.writeObject(user.getName());
         } catch (IOException e) {
             logger.error("error", e);

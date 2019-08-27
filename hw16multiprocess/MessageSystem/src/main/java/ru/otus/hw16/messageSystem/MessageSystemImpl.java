@@ -24,7 +24,7 @@ public class MessageSystemImpl implements MessageSystem {
 
     @Override
     public void sendMessage(Message message) {
-
+        messageSocketMap.get(message.getFromSocket()).add(message);
     }
 
     private void processMsgSocketInput(Socket socket) {
@@ -32,7 +32,7 @@ public class MessageSystemImpl implements MessageSystem {
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 Message msg = messages.take();
-
+                System.out.println("Сообщение от фронтенда: " + msg);
             }
         } catch (Exception e) {
             logger.error("error", e);
