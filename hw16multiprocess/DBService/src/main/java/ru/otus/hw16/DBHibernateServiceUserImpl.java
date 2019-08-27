@@ -4,10 +4,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import ru.otus.hw16.cache.CacheEngine;
 import ru.otus.hw16.dto.User;
-import ru.otus.hw16.messageSystem.Address;
 import ru.otus.hw16.messageSystem.DBService;
 import ru.otus.hw16.messageSystem.MessageSystem;
-import ru.otus.hw16.messageSystem.MessageSystemContext;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -22,18 +20,14 @@ import java.util.List;
 public class DBHibernateServiceUserImpl implements DBService<User> {
     private final SessionFactory sessionFactory;
     private final CacheEngine<Long, User> cacheEngine;
-//    private final MessageSystemContext messageSystemContext;
-    private final Address address;
     private Socket clientSocket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
-    public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, /*MessageSystemContext messageSystemContext,*/ SessionFactory sessionFactory, Address address) {
+    public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
 
         this.cacheEngine = cacheEngine;
-//        this.messageSystemContext = messageSystemContext;
-        this.address = address;
     }
 
     @Override
@@ -98,20 +92,9 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
     }
 
     @Override
-    public Address getAddress() {
-        return address;
-    }
-
-    @Override
     public void init() {
 //        messageSystemContext.getMessageSystem().addAddresse(this);
 //        messageSystemContext.setDbAddress(address);
-    }
-
-    @Override
-    public MessageSystem getMS() {
-//        return messageSystemContext.getMessageSystem();
-        return null;
     }
 
     @Override

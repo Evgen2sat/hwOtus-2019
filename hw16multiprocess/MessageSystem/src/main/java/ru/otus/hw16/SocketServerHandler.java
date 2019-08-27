@@ -3,6 +3,7 @@ package ru.otus.hw16;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw16.dto.User;
+import ru.otus.hw16.messageSystem.MessageSystem;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,12 +12,15 @@ import java.net.Socket;
 public class SocketServerHandler extends Thread {
     private static Logger logger = LoggerFactory.getLogger(SocketServerHandler.class);
 
-    private Socket clientSocket;
+    private final Socket clientSocket;
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
+    private final MessageSystem messageSystem;
 
-    public SocketServerHandler(Socket clientSocket) {
+    public SocketServerHandler(Socket clientSocket, MessageSystem messageSystem) {
         this.clientSocket = clientSocket;
+        this.messageSystem = messageSystem;
+        this.messageSystem.addSocket(clientSocket);
         System.out.println("Подключен клиент: " + this.clientSocket.toString());
     }
 

@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw16.cache.CacheEngineImpl;
 import ru.otus.hw16.dto.User;
-import ru.otus.hw16.messageSystem.Address;
 
 import java.io.IOException;
 
@@ -29,7 +28,7 @@ public class DBServiceMain {
 
         CacheEngineImpl<Long, User> cacheEngine = new CacheEngineImpl<>(3, 10000, false);
 
-        DBHibernateServiceUserImpl dbHibernateServiceUser = new DBHibernateServiceUserImpl(cacheEngine, sessionFactory, new Address());
+        DBHibernateServiceUserImpl dbHibernateServiceUser = new DBHibernateServiceUserImpl(cacheEngine, sessionFactory);
         try {
             dbHibernateServiceUser.startConnection("127.0.0.1", 4444);
         } catch (IOException e) {

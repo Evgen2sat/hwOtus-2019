@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import ru.otus.hw16.FrontendServiceImpl;
-import ru.otus.hw16.TestSocket;
-import ru.otus.hw16.messageSystem.Address;
 
 import java.io.IOException;
 
@@ -29,7 +27,7 @@ public class Config {
 
     @Bean
     public FrontendServiceImpl initFrontendServiceImpl(SimpMessagingTemplate simpMessagingTemplate) {
-        FrontendServiceImpl frontendService = new FrontendServiceImpl(new Address(), simpMessagingTemplate);
+        FrontendServiceImpl frontendService = new FrontendServiceImpl(simpMessagingTemplate);
         try {
             frontendService.startConnection("127.0.0.1", 4444);
 //            frontendService.stopConnection();

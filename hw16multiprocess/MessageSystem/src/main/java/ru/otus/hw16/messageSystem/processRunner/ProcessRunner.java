@@ -1,4 +1,4 @@
-package ru.otus.hw16;
+package ru.otus.hw16.messageSystem.processRunner;
 
 import java.io.IOException;
 
