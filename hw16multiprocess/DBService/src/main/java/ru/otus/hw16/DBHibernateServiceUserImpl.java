@@ -6,6 +6,8 @@ import ru.otus.hw16.cache.CacheEngine;
 import ru.otus.hw16.dto.User;
 import ru.otus.hw16.messageSystem.DBService;
 import ru.otus.hw16.messageSystem.MessageSystem;
+import ru.otus.hw16.messageSystem.MessageType;
+import ru.otus.hw16.messageSystem.message.Message;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -102,6 +104,9 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
         clientSocket = new Socket(host, port);
         out = new ObjectOutputStream(clientSocket.getOutputStream());
         in = new ObjectInputStream(clientSocket.getInputStream());
+
+        Message message = new Message(null, 100, MessageType.REGISTER_DB);
+        out.writeObject(message);
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw16.dto.User;
 import ru.otus.hw16.messageSystem.MessageSystem;
+import ru.otus.hw16.messageSystem.MessageType;
 import ru.otus.hw16.messageSystem.message.Message;
 
 import java.io.ObjectInputStream;
@@ -31,9 +32,14 @@ public class SocketServerHandler extends Thread {
             outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
             inputStream = new ObjectInputStream(clientSocket.getInputStream());
             while (!Thread.currentThread().isInterrupted()) {
-                Object msg = inputStream.readObject();
-//                System.out.println("Сообщение от клиента: " + msg);
-                messageSystem.sendMessage(new Message(msg.toString(), clientSocket));
+                Message msg = (Message) inputStream.readObject();
+
+                if(msg.getType() == MessageType.REGISTER_FRONTEND || msg.getType() == MessageType.REGISTER_DB) {
+                    messageSystem.registerSocketClient(msg, clientSocket);
+                } else {
+                    //                System.out.println("Сообщение от клиента: " + msg);
+                    messageSystem.sendMessage(clientSocket, msg);
+                }
             }
 
 
@@ -46,7 +52,7 @@ public class SocketServerHandler extends Thread {
             } catch (Exception ex) {
                 logger.error("error", ex);
             }
-        }/* finally {
+        } finally {
             try {
                 inputStream.close();
                 outputStream.close();
@@ -54,6 +60,6 @@ public class SocketServerHandler extends Thread {
             } catch (Exception e) {
                 logger.error("error", e);
             }
-        }*/
+        }
     }
 }

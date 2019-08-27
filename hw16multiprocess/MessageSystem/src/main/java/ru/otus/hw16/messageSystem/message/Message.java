@@ -1,25 +1,20 @@
 package ru.otus.hw16.messageSystem.message;
 
+import ru.otus.hw16.messageSystem.MessageType;
 import ru.otus.hw16.messageSystem.SocketClient;
 
+import java.io.Serializable;
 import java.net.Socket;
 
-public class Message {
-    private Socket fromSocket;
+public class Message implements Serializable {
     private String msg;
-    private SocketClient fromSocketClient;
+    private int address;
+    private MessageType type;
 
-    public Message(String msg, Socket fromSocket) {
+    public Message(String msg, int address, MessageType type) {
         this.msg = msg;
-        this.fromSocket = fromSocket;
-    }
-
-    public Socket getFromSocket() {
-        return fromSocket;
-    }
-
-    public void setFromSocket(Socket fromSocket) {
-        this.fromSocket = fromSocket;
+        this.address = address;
+        this.type = type;
     }
 
     public String getMsg() {
@@ -30,11 +25,19 @@ public class Message {
         this.msg = msg;
     }
 
-    public SocketClient getFromSocketClient() {
-        return fromSocketClient;
+    public int getAddress() {
+        return address;
     }
 
-    public void setFromSocketClient(SocketClient fromSocketClient) {
-        this.fromSocketClient = fromSocketClient;
+    public void setAddress(int address) {
+        this.address = address;
+    }
+
+    public MessageType getType() {
+        return type;
+    }
+
+    public void setType(MessageType type) {
+        this.type = type;
     }
 }

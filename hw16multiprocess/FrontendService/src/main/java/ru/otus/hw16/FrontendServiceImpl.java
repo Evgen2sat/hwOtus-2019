@@ -64,6 +64,9 @@ public class FrontendServiceImpl implements FrontendService {
         clientSocket = new Socket(host, port);
         this.out = new ObjectOutputStream(clientSocket.getOutputStream());
         this.in = new ObjectInputStream(clientSocket.getInputStream());
+
+        Message message = new Message(null, 100, MessageType.REGISTER_FRONTEND);
+        this.out.writeObject(message);
     }
 
     @Override
