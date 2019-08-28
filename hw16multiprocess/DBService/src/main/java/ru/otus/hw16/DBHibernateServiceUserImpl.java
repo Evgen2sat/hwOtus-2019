@@ -125,8 +125,8 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
     private void readInputstream() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                Object o = inputStream.readObject();
-                outputStream.writeObject(new Message(o.toString(), 100, MessageType.TO_FRONTEND));
+                Message msg = (Message) inputStream.readObject();
+                outputStream.writeObject(new Message(msg.getMsg(), 100, MessageType.TO_FRONTEND));
             } catch (Exception e) {
                 e.printStackTrace();
             }

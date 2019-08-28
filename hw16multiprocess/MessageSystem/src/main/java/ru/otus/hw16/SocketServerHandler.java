@@ -77,7 +77,7 @@ public class SocketServerHandler extends Thread {
             while (!Thread.currentThread().isInterrupted()) {
                 Message msg = outputQueue.take();
                 System.out.println("Есть сообщение в очереди для отправки: " + msg.getMsg());
-                outputStream.writeObject(msg.getMsg());
+                outputStream.writeObject(msg);
                 System.out.println("Отправил сообщение в исходящий поток: " + msg.getMsg());
             }
         } catch (Exception e) {
