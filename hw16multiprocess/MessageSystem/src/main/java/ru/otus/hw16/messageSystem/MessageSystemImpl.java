@@ -13,7 +13,7 @@ public class MessageSystemImpl implements MessageSystem {
     private static Logger logger = LoggerFactory.getLogger(MessageSystemImpl.class);
 
     private ConcurrentMap<Socket, LinkedBlockingQueue<Message>> messageSocketMap = new ConcurrentHashMap<>();
-    private ConcurrentMap<MessageType, ConcurrentMap<Integer, Socket>> registeredClients = new ConcurrentHashMap<>();
+    private ConcurrentMap<MessageType, ConcurrentMap<Integer, LinkedBlockingQueue<Message>>> registeredClients = new ConcurrentHashMap<>();
 
     @Override
     public void addSocket(Socket socket) {
@@ -30,13 +30,13 @@ public class MessageSystemImpl implements MessageSystem {
     }
 
     @Override
-    public void registerSocketClient(Message message, Socket socket) {
+    public void registerSocketClient(Message message, LinkedBlockingQueue<Message> outputQueue) {
         if(!registeredClients.containsKey(message.getType())) {
-            ConcurrentMap<Integer, Socket> map = new ConcurrentHashMap<>();
-            map.put(message.getAddress(), socket);
+            ConcurrentMap<Integer, LinkedBlockingQueue<Message>> map = new ConcurrentHashMap<>();
+            map.put(message.getAddress(), outputQueue);
             registeredClients.put(message.getType(), map);
         } else {
-            registeredClients.get(message.getType()).put(message.getAddress(), socket);
+            registeredClients.get(message.getType()).put(message.getAddress(), outputQueue);
         }
 
         System.out.println("Зарегистрирован клиент: " + message.getType());
@@ -48,13 +48,12 @@ public class MessageSystemImpl implements MessageSystem {
             while (!Thread.currentThread().isInterrupted()) {
                 Message msg = messages.take();
 //                System.out.println("Сообщение от фронтенда: " + msg);
-                System.out.println("Сообщение от фронтенда: " + msg.getMsg());
                 if(msg.getType() == MessageType.TO_DB) {
-                    System.out.println("Отправляем в БД");
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(registeredClients.get(MessageType.REGISTER_DB).get(msg.getAddress()).getOutputStream());
-                    System.out.println("Получил objectOutputStream");
-                    objectOutputStream.writeObject(msg.getMsg());
-                    System.out.println("Отправил в objectOutputStream");
+                    System.out.println("Сообщение от фронтенда: " + msg.getMsg());
+                    LinkedBlockingQueue<Message> outputMessagesQueue = registeredClients.get(MessageType.REGISTER_DB).get(msg.getAddress());
+                    outputMessagesQueue.put(msg);
+                } else {
+                    System.out.println("Сообщение от DB: " + msg.getMsg());
                 }
             }
         } catch (Exception e) {

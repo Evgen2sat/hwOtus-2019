@@ -18,13 +18,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DBHibernateServiceUserImpl implements DBService<User> {
     private final SessionFactory sessionFactory;
     private final CacheEngine<Long, User> cacheEngine;
     private Socket clientSocket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
+    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
 
     public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -102,33 +104,32 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
     @Override
     public void startConnection(String host, int port) throws IOException {
         clientSocket = new Socket(host, port);
-        out = new ObjectOutputStream(clientSocket.getOutputStream());
-        in = new ObjectInputStream(clientSocket.getInputStream());
+        outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+        inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
         Message message = new Message(null, 100, MessageType.REGISTER_DB);
-        out.writeObject(message);
+        outputStream.writeObject(message);
 
-        new Thread(() -> {
-            System.out.println("В потоке ДБ");
-            while (true) {
-                try {
-                    System.out.println("Сообщение в ДБ");
-                    Object o = in.readObject();
-                    out.writeObject(new Message("TTTTTTTTTTTTTTTT", 100, MessageType.TO_FRONTEND));
-                    System.out.println("Сообщение в ДБ: " + o);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(this::readInputstream);
+        executorService.shutdown();
     }
 
     @Override
     public void stopConnection() throws IOException {
-        in.close();
-        out.close();
+        inputStream.close();
+        outputStream.close();
         clientSocket.close();
+    }
+
+    private void readInputstream() {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                Object o = inputStream.readObject();
+                outputStream.writeObject(new Message(o.toString(), 100, MessageType.TO_FRONTEND));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -24,3 +24,12 @@ hs_err_pid*
 
 .idea
 target
+hw15websocket/hw15-websocket.iml
+
+hw16multiprocess/DBService/DBService.iml
+
+hw16multiprocess/FrontendService/FrontendService.iml
+
+hw16multiprocess/hw16-multiprocess.iml
+
+hw16multiprocess/MessageSystem/MessageSystem.iml
