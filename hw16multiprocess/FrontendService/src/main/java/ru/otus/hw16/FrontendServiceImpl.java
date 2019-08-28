@@ -30,24 +30,13 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void createUser(User user) {
-//        Message msgCreateUser = new MsgCreateUser(getAddress(), messageSystemContext.getDbAddress(), user);
-//        messageSystemContext.getMessageSystem().sendMessage(msgCreateUser);
         try {
-//            Message msg = new Message(user.getName(), this);
             String jsonObject = new Gson().toJson(user);
-            Message msg = new Message(jsonObject, 100, MessageType.TO_DB);
+            Message msg = new Message(jsonObject, 100, MessageType.TO_DB, ActionType.CREATE_USER);
             out.writeObject(msg);
         } catch (IOException e) {
             logger.error("error", e);
         }
-    }
-
-    @Override
-    public void init() throws IOException {
-//        messageSystemContext.getMessageSystem().addAddresse(this);
-//        messageSystemContext.setFrontendAddress(address);
-        this.out = new ObjectOutputStream(clientSocket.getOutputStream());
-        this.in = new ObjectInputStream(clientSocket.getInputStream());
     }
 
     @Override
@@ -57,8 +46,12 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void getAllUsers() {
-//        Message msgGetAllUsers = new MsgGetAllUsers(getAddress(), messageSystemContext.getDbAddress());
-//        messageSystemContext.getMessageSystem().sendMessage(msgGetAllUsers);
+        try {
+            Message msg = new Message(null, 100, MessageType.TO_DB, ActionType.GET_ALL_USERS);
+            out.writeObject(msg);
+        } catch (IOException e) {
+            logger.error("error", e);
+        }
     }
 
     @Override
@@ -67,7 +60,7 @@ public class FrontendServiceImpl implements FrontendService {
         this.out = new ObjectOutputStream(clientSocket.getOutputStream());
         this.in = new ObjectInputStream(clientSocket.getInputStream());
 
-        Message message = new Message(null, 100, MessageType.REGISTER_FRONTEND);
+        Message message = new Message(null, 100, MessageType.REGISTER_FRONTEND, null);
         this.out.writeObject(message);
     }
 

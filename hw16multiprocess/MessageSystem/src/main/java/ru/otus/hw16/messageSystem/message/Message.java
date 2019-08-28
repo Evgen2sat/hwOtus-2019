@@ -1,5 +1,6 @@
 package ru.otus.hw16.messageSystem.message;
 
+import ru.otus.hw16.messageSystem.ActionType;
 import ru.otus.hw16.messageSystem.MessageType;
 import ru.otus.hw16.messageSystem.SocketClient;
 
@@ -10,11 +11,13 @@ public class Message implements Serializable {
     private String msg;
     private int address;
     private MessageType type;
+    private ActionType actionType;
 
-    public Message(String msg, int address, MessageType type) {
+    public Message(String msg, int address, MessageType type, ActionType actionType) {
         this.msg = msg;
         this.address = address;
         this.type = type;
+        this.actionType = actionType;
     }
 
     public String getMsg() {
@@ -39,5 +42,13 @@ public class Message implements Serializable {
 
     public void setType(MessageType type) {
         this.type = type;
+    }
+
+    public ActionType getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(ActionType actionType) {
+        this.actionType = actionType;
     }
 }

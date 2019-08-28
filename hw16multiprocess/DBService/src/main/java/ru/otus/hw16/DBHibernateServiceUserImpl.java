@@ -107,7 +107,7 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
         outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
         inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-        Message message = new Message(null, 100, MessageType.REGISTER_DB);
+        Message message = new Message(null, 100, MessageType.REGISTER_DB, null);
         outputStream.writeObject(message);
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -126,7 +126,7 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Message msg = (Message) inputStream.readObject();
-                outputStream.writeObject(new Message(msg.getMsg(), 100, MessageType.TO_FRONTEND));
+                outputStream.writeObject(new Message(msg.getMsg(), 100, MessageType.TO_FRONTEND, null));
             } catch (Exception e) {
                 e.printStackTrace();
             }
