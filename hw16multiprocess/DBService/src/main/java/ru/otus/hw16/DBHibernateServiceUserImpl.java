@@ -1,5 +1,6 @@
 package ru.otus.hw16;
 
+import com.google.gson.Gson;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import ru.otus.hw16.cache.CacheEngine;
@@ -96,12 +97,6 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
     }
 
     @Override
-    public void init() {
-//        messageSystemContext.getMessageSystem().addAddresse(this);
-//        messageSystemContext.setDbAddress(address);
-    }
-
-    @Override
     public void startConnection(String host, int port) throws IOException {
         clientSocket = new Socket(host, port);
         outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -126,10 +121,26 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Message msg = (Message) inputStream.readObject();
-                outputStream.writeObject(new Message(msg.getMsg(), 100, MessageType.TO_FRONTEND, null));
+
+                action(msg);
+
+//                outputStream.writeObject(new Message(msg.getMsg(), 100, MessageType.TO_FRONTEND, null));
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void action(Message message) throws IOException {
+        switch (message.getActionType()) {
+            case CREATE_USER:
+                User user = new Gson().fromJson(message.getMsg(), User.class);
+                create(user);
+                outputStream.writeObject(new Message(new Gson().toJson(getItems()), 100, MessageType.TO_FRONTEND, null));
+                break;
+            case GET_ALL_USERS:
+                outputStream.writeObject(new Message(new Gson().toJson(getItems()), 100, MessageType.TO_FRONTEND, null));
+                break;
         }
     }
 }

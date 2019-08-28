@@ -12,6 +12,4 @@ public interface DBService<T> extends AutoCloseable, SocketClient {
     void createTable();
 
     List<T> getItems();
-
-    void init();
 }
