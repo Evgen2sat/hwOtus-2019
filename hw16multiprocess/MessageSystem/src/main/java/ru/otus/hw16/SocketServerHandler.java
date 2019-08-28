@@ -42,8 +42,6 @@ public class SocketServerHandler extends Thread {
             inputStream = new ObjectInputStream(clientSocket.getInputStream());
             while (!Thread.currentThread().isInterrupted()) {
                 Message msg = (Message) inputStream.readObject();
-//                outputStream.writeObject(msg);
-
                 if(msg.getType() == MessageType.REGISTER_FRONTEND || msg.getType() == MessageType.REGISTER_DB) {
                     System.out.println("Отправляю сервис на регистрацию в MS");
                     messageSystem.registerSocketClient(msg, outputQueue);

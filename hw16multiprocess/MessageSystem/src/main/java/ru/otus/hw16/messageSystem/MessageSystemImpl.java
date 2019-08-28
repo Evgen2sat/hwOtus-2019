@@ -47,7 +47,6 @@ public class MessageSystemImpl implements MessageSystem {
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 Message msg = messages.take();
-//                System.out.println("Сообщение от фронтенда: " + msg);
                 if(msg.getType() == MessageType.TO_DB) {
                     System.out.println("Сообщение от фронтенда: " + msg.getMsg());
                     LinkedBlockingQueue<Message> outputMessagesQueue = registeredClients.get(MessageType.REGISTER_DB).get(msg.getAddress());
