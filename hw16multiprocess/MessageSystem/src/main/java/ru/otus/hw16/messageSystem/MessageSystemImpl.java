@@ -53,6 +53,8 @@ public class MessageSystemImpl implements MessageSystem {
                     outputMessagesQueue.put(msg);
                 } else {
                     System.out.println("Сообщение от DB: " + msg.getMsg());
+                    LinkedBlockingQueue<Message> outputMessagesQueue = registeredClients.get(MessageType.REGISTER_FRONTEND).get(msg.getAddress());
+                    outputMessagesQueue.put(msg);
                 }
             }
         } catch (Exception e) {

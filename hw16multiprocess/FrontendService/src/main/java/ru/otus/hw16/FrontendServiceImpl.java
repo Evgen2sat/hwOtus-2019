@@ -1,6 +1,7 @@
 package ru.otus.hw16;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -14,6 +15,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FrontendServiceImpl implements FrontendService {
 
@@ -26,6 +29,10 @@ public class FrontendServiceImpl implements FrontendService {
 
     public FrontendServiceImpl(SimpMessagingTemplate simpMessagingTemplate){
         this.simpMessagingTemplate = simpMessagingTemplate;
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(this::readInputstream);
+        executorService.shutdown();
     }
 
     @Override
@@ -69,5 +76,16 @@ public class FrontendServiceImpl implements FrontendService {
         in.close();
         out.close();
         clientSocket.close();
+    }
+
+    private void readInputstream() {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                Message msg = (Message) in.readObject();
+                accept(new Gson().fromJson(msg.getMsg(), new TypeToken<List<User>>(){}.getType()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

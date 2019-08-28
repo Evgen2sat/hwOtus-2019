@@ -123,8 +123,6 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
                 Message msg = (Message) inputStream.readObject();
 
                 action(msg);
-
-//                outputStream.writeObject(new Message(msg.getMsg(), 100, MessageType.TO_FRONTEND, null));
             } catch (Exception e) {
                 e.printStackTrace();
             }
