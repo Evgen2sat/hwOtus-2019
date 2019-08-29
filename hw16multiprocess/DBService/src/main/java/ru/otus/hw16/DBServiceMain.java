@@ -15,8 +15,16 @@ public class DBServiceMain {
 
     private static Logger logger = LoggerFactory.getLogger(DBServiceMain.class);
 
+    public static int ADDRESS;
 
     public static void main(String[] args) {
+
+        for(String arg : args) {
+            if(arg.startsWith("-address")) {
+                ADDRESS = Integer.valueOf(arg.split("=")[1]);
+                break;
+            }
+        }
 
         StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder()
                 .configure()

@@ -39,7 +39,7 @@ public class FrontendServiceImpl implements FrontendService {
     public void createUser(User user) {
         try {
             String jsonObject = new Gson().toJson(user);
-            Message msg = new Message(jsonObject, 100, MessageType.TO_DB, ActionType.CREATE_USER);
+            Message msg = new Message(jsonObject, FrontendServiceMain.ADDRESS, MessageType.TO_DB, ActionType.CREATE_USER);
             out.writeObject(msg);
         } catch (IOException e) {
             logger.error("error", e);
@@ -54,7 +54,7 @@ public class FrontendServiceImpl implements FrontendService {
     @Override
     public void getAllUsers() {
         try {
-            Message msg = new Message(null, 100, MessageType.TO_DB, ActionType.GET_ALL_USERS);
+            Message msg = new Message(null, FrontendServiceMain.ADDRESS, MessageType.TO_DB, ActionType.GET_ALL_USERS);
             out.writeObject(msg);
         } catch (IOException e) {
             logger.error("error", e);
@@ -67,7 +67,7 @@ public class FrontendServiceImpl implements FrontendService {
         this.out = new ObjectOutputStream(clientSocket.getOutputStream());
         this.in = new ObjectInputStream(clientSocket.getInputStream());
 
-        Message message = new Message(null, 100, MessageType.REGISTER_FRONTEND, null);
+        Message message = new Message(null, FrontendServiceMain.ADDRESS, MessageType.REGISTER_FRONTEND, null);
         this.out.writeObject(message);
     }
 

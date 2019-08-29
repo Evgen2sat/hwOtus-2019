@@ -102,7 +102,7 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
         outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
         inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-        Message message = new Message(null, 100, MessageType.REGISTER_DB, null);
+        Message message = new Message(null, DBServiceMain.ADDRESS, MessageType.REGISTER_DB, null);
         outputStream.writeObject(message);
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -134,10 +134,10 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
             case CREATE_USER:
                 User user = new Gson().fromJson(message.getMsg(), User.class);
                 create(user);
-                outputStream.writeObject(new Message(new Gson().toJson(getItems()), 100, MessageType.TO_FRONTEND, null));
+                outputStream.writeObject(new Message(new Gson().toJson(getItems()), DBServiceMain.ADDRESS, MessageType.TO_FRONTEND, null));
                 break;
             case GET_ALL_USERS:
-                outputStream.writeObject(new Message(new Gson().toJson(getItems()), 100, MessageType.TO_FRONTEND, null));
+                outputStream.writeObject(new Message(new Gson().toJson(getItems()), DBServiceMain.ADDRESS, MessageType.TO_FRONTEND, null));
                 break;
         }
     }
