@@ -1,12 +1,17 @@
 package ru.otus.hw16.messageSystem.processRunner;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class ProcessRunnerImpl implements ProcessRunner {
+    private static final Logger logger = LoggerFactory.getLogger(ProcessRunnerImpl.class);
+
     private final StringBuffer out = new StringBuffer();
     private Process process;
 
@@ -17,7 +22,7 @@ public class ProcessRunnerImpl implements ProcessRunner {
         try {
             Thread.sleep(1000L);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("error", e);
         }
         System.out.println("is proccess " + command + " status: " + process.isAlive());
     }
@@ -65,7 +70,7 @@ public class ProcessRunnerImpl implements ProcessRunner {
                     out.append(type).append('>').append(line).append("\n");
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("error", e);
             }
         }
     }

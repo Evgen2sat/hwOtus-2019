@@ -3,6 +3,8 @@ package ru.otus.hw16;
 import com.google.gson.Gson;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.hw16.cache.CacheEngine;
 import ru.otus.hw16.dto.User;
 import ru.otus.hw16.messageSystem.DBService;
@@ -28,6 +30,7 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
     private Socket clientSocket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
+    private static Logger logger = LoggerFactory.getLogger(DBHibernateServiceUserImpl.class);
 
     public DBHibernateServiceUserImpl(CacheEngine<Long, User> cacheEngine, SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -124,7 +127,7 @@ public class DBHibernateServiceUserImpl implements DBService<User> {
 
                 action(msg);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("error", e);
             }
         }
     }

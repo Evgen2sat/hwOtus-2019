@@ -84,7 +84,7 @@ public class FrontendServiceImpl implements FrontendService {
                 Message msg = (Message) in.readObject();
                 accept(new Gson().fromJson(msg.getMsg(), new TypeToken<List<User>>(){}.getType()));
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("error", e);
             }
         }
     }
