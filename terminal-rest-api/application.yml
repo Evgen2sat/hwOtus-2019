@@ -28,3 +28,5 @@ external-services:
         url: http://localhost:8090
     patient:
         url: http://localhost:8080
+    dictionary:
+        url: http://localhost:8100
