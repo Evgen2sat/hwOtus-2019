@@ -1,4 +1,8 @@
-FROM adoptopenjdk/openjdk11-openj9:jdk-11.0.1.13-alpine-slim
-COPY build/libs/*.jar terminal-rest-api.jar
-EXPOSE 8080
-CMD java  -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dcom.sun.management.jmxremote -noverify ${JAVA_OPTS} -jar terminal-rest-api.jar
+FROM openjdk:8u171-alpine3.7
+RUN apk --no-cache add curl
+RUN mkdir /opt
+RUN mkdir /opt/terminal-api-project
+RUN mkdir /opt/terminal-api-project/config
+COPY *.jar /opt/terminal-api-project/terminal-api-project.jar
+WORKDIR /opt/terminal-api-project
+CMD java -Dmicronaut.config.files=config/application.yml -jar terminal-api-project.jar
