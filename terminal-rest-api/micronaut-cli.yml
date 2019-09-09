@@ -1,5 +1,0 @@
-profile: service
-defaultPackage: terminal.rest.api
----
-testFramework: junit
-sourceLanguage: java
