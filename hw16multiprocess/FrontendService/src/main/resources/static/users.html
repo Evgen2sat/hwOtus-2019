@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/app.js"></script>
+</head>
+<body onload="connect()">
+Имя: <input id="name" type="text" size="40"><br/>
+Возраст: <input id="age" type="number" size="40"><br/>
+<input id="btnSave" type="button" value="Добавить" type="submit" />
+
+<table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>age</th>
+        </tr>
+    </thead>
+    <tbody id="users">
+</table>
+</body>
+</html>
